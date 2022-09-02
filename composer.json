@@ -1,0 +1,23 @@
+{
+    "name": "profesia/messaging-core",
+    "type": "library",
+    "license": "MIT",
+    "description": "",
+    "autoload": {
+        "psr-4": {
+            "Profesia\\MessagingCore\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Matej Bádal",
+            "email": "matej.badal@profesia.sk"
+        }
+    ],
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "ramsey/uuid": "^4.2",
+        "ext-json": "*",
+        "google/cloud-pubsub": "^1.39"
+    }
+}
