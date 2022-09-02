@@ -7,8 +7,9 @@ namespace Profesia\MessagingCore\Adapter;
 use Google\Cloud\PubSub\PubSubClient;
 use Google\Cloud\PubSub\Topic;
 use Profesia\MessagingCore\Broking\Dto\MessageCollection;
+use Profesia\MessagingCore\Broking\Exception\AbstractMessageBrokerException;
+use Profesia\MessagingCore\Broking\Exception\MessageBrokerRuntimeException;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
-use RuntimeException;
 
 final class PubSubMessageBroker implements MessageBrokerInterface
 {
@@ -19,6 +20,12 @@ final class PubSubMessageBroker implements MessageBrokerInterface
         $this->pubSubClient = $pubSubClient;
     }
 
+    /**
+     * @param MessageCollection $collection
+     *
+     * @return void
+     * @throws AbstractMessageBrokerException
+     */
     public function publish(MessageCollection $collection): void
     {
         $topic = $this->getTopic($collection->getChannel());
@@ -28,12 +35,18 @@ final class PubSubMessageBroker implements MessageBrokerInterface
         );
     }
 
+    /**
+     * @param string $topicName
+     *
+     * @return Topic
+     * @throws MessageBrokerRuntimeException
+     */
     private function getTopic(string $topicName): Topic
     {
         $topic = $this->pubSubClient->topic($topicName);
 
         if ($topic->exists() === false) {
-            throw new RuntimeException("Topic with name: [{$topicName}] does not exist");
+            throw new MessageBrokerRuntimeException("Topic with name: [{$topicName}] does not exist");
         }
 
         return $topic;

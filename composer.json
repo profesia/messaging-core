@@ -16,8 +16,13 @@
     ],
     "require": {
         "php": "^7.4 || ^8.0",
-        "ramsey/uuid": "^4.2",
         "ext-json": "*",
-        "google/cloud-pubsub": "^1.39"
+        "ramsey/uuid": "^4.2",
+        "google/cloud-pubsub": "^1.39",
+        "psr/log": "^1.1 || ^2.0"
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.5",
+        "phpunit/phpunit": "^9.5"
     }
 }

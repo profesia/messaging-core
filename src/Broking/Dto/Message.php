@@ -8,18 +8,18 @@ use DateTimeImmutable;
 
 final class Message
 {
-    public const EVENT_CORRELATION_ID = 'correlationId';
-    public const EVENT_TYPE           = 'eventType';
-    public const EVENT_OCCURRED_ON    = 'eventOccurredOn';
-    public const EVENT_RESOURCE       = 'resource';
-    public const EVENT_PROVIDER       = 'provider';
-    public const EVENT_OBJECT_ID      = 'objectId';
-    public const EVENT_TARGET         = 'target';
-    public const EVENT_ATTRIBUTES     = 'attributes';
-    public const EVENT_DATA           = 'data';
+    private const EVENT_CORRELATION_ID = 'correlationId';
+    private const EVENT_TYPE           = 'eventType';
+    private const EVENT_OCCURRED_ON    = 'eventOccurredOn';
+    private const EVENT_RESOURCE       = 'resource';
+    private const EVENT_PROVIDER       = 'provider';
+    private const EVENT_OBJECT_ID      = 'objectId';
+    private const EVENT_TARGET         = 'target';
+    private const EVENT_ATTRIBUTES     = 'attributes';
+    private const MESSAGE_HASH         = 'hash';
+    private const MESSAGE_PAYLOAD      = 'payload';
 
-    private const MESSAGE_HASH    = 'hash';
-    private const MESSAGE_PAYLOAD = 'payload';
+    public const EVENT_DATA = 'data';
 
     private string $resource;
     private string $eventType;
@@ -63,8 +63,10 @@ final class Message
         ];
 
         $data = array_merge($attributes, [self::MESSAGE_PAYLOAD => $this->payload]);
+        $hash = md5(
+            json_encode($data)
+        );
 
-        $hash                     = md5(json_encode($data));
         $data[self::MESSAGE_HASH] = $hash;
 
         return [
