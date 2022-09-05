@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Profesia\MessagingCore\Adapter;
 
+use Google\Cloud\Core\Exception\ServiceException;
 use Google\Cloud\PubSub\PubSubClient;
 use Google\Cloud\PubSub\Topic;
 use Profesia\MessagingCore\Broking\Dto\MessageCollection;
@@ -30,9 +31,13 @@ final class PubSubMessageBroker implements MessageBrokerInterface
     {
         $topic = $this->getTopic($collection->getChannel());
 
-        $topic->publishBatch(
-            $collection->getMessagesData()
-        );
+        try {
+            $topic->publishBatch(
+                $collection->getMessagesData()
+            );
+        } catch (ServiceException $e) {
+            throw new MessageBrokerRuntimeException("Error while publishing messages. Cause: [{$e->getMessage()}]");
+        }
     }
 
     /**
