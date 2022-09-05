@@ -24,5 +24,8 @@
     "require-dev": {
         "mockery/mockery": "^1.5",
         "phpunit/phpunit": "^9.5"
+    },
+    "scripts": {
+        "test": "XDEBUG_MODE=coverage ./vendor/bin/phpunit"
     }
 }
