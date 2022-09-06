@@ -16,7 +16,6 @@ final class Message
     private const EVENT_OBJECT_ID      = 'objectId';
     private const EVENT_TARGET         = 'target';
     private const EVENT_ATTRIBUTES     = 'attributes';
-    private const MESSAGE_HASH         = 'hash';
     private const MESSAGE_PAYLOAD      = 'payload';
 
     public const EVENT_DATA = 'data';
@@ -63,11 +62,6 @@ final class Message
         ];
 
         $data = array_merge($attributes, [self::MESSAGE_PAYLOAD => $this->payload]);
-        $hash = md5(
-            json_encode($data)
-        );
-
-        $data[self::MESSAGE_HASH] = $hash;
 
         return [
             self::EVENT_ATTRIBUTES => $attributes,

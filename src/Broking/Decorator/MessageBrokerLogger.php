@@ -14,11 +14,13 @@ final class MessageBrokerLogger implements MessageBrokerInterface
 {
     private MessageBrokerInterface $decoratedBroker;
     private LoggerInterface $logger;
+    private string $projectName;
 
-    public function __construct(MessageBrokerInterface $decoratedBroker, LoggerInterface $logger)
+    public function __construct(MessageBrokerInterface $decoratedBroker, LoggerInterface $logger, string $projectName)
     {
         $this->decoratedBroker = $decoratedBroker;
         $this->logger          = $logger;
+        $this->projectName     = $projectName;
     }
 
 
@@ -30,13 +32,13 @@ final class MessageBrokerLogger implements MessageBrokerInterface
             $messagesData = $collection->getMessagesData();
             foreach ($messagesData as $messageData) {
                 $this->logger->info(
-                    'Event from Profesia Message Broker preprocessing',
+                    "Event from {$this->projectName} was published",
                     json_decode($messageData[Message::EVENT_DATA], true)
                 );
             }
         } catch (AbstractMessageBrokerException $e) {
             $this->logger->error(
-                "Error while publishing messages in Profesia Message Broker. Cause: [{$e->getMessage()}]"
+                "Error while publishing messages in {$this->projectName}. Cause: [{$e->getMessage()}]"
             );
         }
     }
