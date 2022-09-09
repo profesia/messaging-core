@@ -6,7 +6,7 @@ namespace Profesia\MessagingCore\Broking\Decorator;
 
 use Profesia\MessagingCore\Broking\Dto\Message;
 use Profesia\MessagingCore\Broking\Dto\MessageCollection;
-use Profesia\MessagingCore\Broking\Exception\AbstractMessageBrokerException;
+use Profesia\MessagingCore\Broking\Dto\BrokingBatchResponse;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -24,22 +24,27 @@ final class MessageBrokerLogger implements MessageBrokerInterface
     }
 
 
-    public function publish(MessageCollection $collection): void
+    public function publish(MessageCollection $collection): BrokingBatchResponse
     {
-        try {
-            $this->decoratedBroker->publish($collection);
+        $response = $this->decoratedBroker->publish($collection);
+        $statuses = $response->getMessageStatuses();
 
-            $messagesData = $collection->getMessagesData();
-            foreach ($messagesData as $messageData) {
+        foreach ($statuses as $key => $status) {
+            if ($status->isSuccessful() === true) {
+                $messageData = $collection->getMessageData($key);
                 $this->logger->info(
                     "Event from {$this->projectName} was published",
                     json_decode($messageData[Message::EVENT_DATA], true)
                 );
+
+                continue;
             }
-        } catch (AbstractMessageBrokerException $e) {
+
             $this->logger->error(
-                "Error while publishing messages in {$this->projectName}. Cause: [{$e->getMessage()}]"
+                "Error while publishing messages in {$this->projectName}. Cause: [{$status->getReason()}]"
             );
         }
+
+        return $response;
     }
 }

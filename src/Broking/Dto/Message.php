@@ -8,17 +8,16 @@ use DateTimeImmutable;
 
 final class Message
 {
-    private const EVENT_CORRELATION_ID = 'correlationId';
-    private const EVENT_TYPE           = 'eventType';
-    private const EVENT_OCCURRED_ON    = 'eventOccurredOn';
-    private const EVENT_RESOURCE       = 'resource';
-    private const EVENT_PROVIDER       = 'provider';
-    private const EVENT_OBJECT_ID      = 'objectId';
-    private const EVENT_TARGET         = 'target';
-    private const EVENT_ATTRIBUTES     = 'attributes';
-    private const MESSAGE_PAYLOAD      = 'payload';
-
-    public const EVENT_DATA = 'data';
+    public const EVENT_CORRELATION_ID = 'correlationId';
+    public const EVENT_TYPE           = 'eventType';
+    public const EVENT_OCCURRED_ON    = 'eventOccurredOn';
+    public const EVENT_RESOURCE       = 'resource';
+    public const EVENT_PROVIDER       = 'provider';
+    public const EVENT_OBJECT_ID      = 'objectId';
+    public const EVENT_TARGET         = 'target';
+    public const EVENT_ATTRIBUTES     = 'attributes';
+    public const MESSAGE_PAYLOAD      = 'payload';
+    public const EVENT_DATA           = 'data';
 
     private string $resource;
     private string $eventType;
@@ -61,11 +60,11 @@ final class Message
             self::EVENT_TARGET         => $this->target,
         ];
 
-        $data = array_merge($attributes, [self::MESSAGE_PAYLOAD => $this->payload]);
-
         return [
             self::EVENT_ATTRIBUTES => $attributes,
-            self::EVENT_DATA       => json_encode($data),
+            self::EVENT_DATA       => json_encode(
+                array_merge($attributes, [self::MESSAGE_PAYLOAD => $this->payload])
+            ),
         ];
     }
 }
