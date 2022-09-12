@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Profesia\MessagingCore\Persistence;
 
-use Profesia\MessagingCore\Broking\Dto\DispatchedMessage;
+use Profesia\MessagingCore\Broking\Dto\Message;
 
 interface EventRepositoryInterface
 {
-    public function persist(DispatchedMessage $message): void;
+    public function persist(Message $message): void;
 
-    public function persistBatch(DispatchedMessage...$dispatchedMessages): void;
+    public function persistBatch(Message ...$messages): void;
 }

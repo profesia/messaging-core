@@ -8,14 +8,14 @@ use Profesia\MessagingCore\Broking\Dto\BrokingBatchResponse;
 use Profesia\MessagingCore\Broking\Dto\MessageCollection;
 use Profesia\MessagingCore\Broking\Exception\AbstractMessageBrokerException;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
-use Profesia\MessagingCore\Persistence\EventRepositoryInterface;
+use Profesia\MessagingCore\Persistence\DispatchedEventRepositoryInterface;
 
 class MessageBrokerMessagesPersister implements MessageBrokerInterface
 {
     private MessageBrokerInterface $decoratedBroker;
-    private EventRepositoryInterface $repository;
+    private DispatchedEventRepositoryInterface $repository;
     
-    public function __construct(MessageBrokerInterface $decoratedBroker, EventRepositoryInterface $repository)
+    public function __construct(MessageBrokerInterface $decoratedBroker, DispatchedEventRepositoryInterface $repository)
     {
         $this->decoratedBroker = $decoratedBroker;
     }
