@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Profesia\MessagingCore\Broking\Dto;
 
-use Profesia\MessagingCore\Broking\Exception\KeyDoesNotExistException;
-
 final class MessageCollection
 {
     /** @var Message[] */
