@@ -12,17 +12,17 @@ final class MessageCollection
     private array $messages;
     private string $channel;
 
-    private function __construct(string $channel, Message...$messages)
+    private function __construct(string $channel, array $messages)
     {
         $this->messages = $messages;
         $this->channel  = $channel;
     }
 
-    public static function createFromMessagesAndChannel(array $messages, string $channel): MessageCollection
+    public static function createFromMessagesAndChannel(string $channel, Message... $messages): MessageCollection
     {
         return new self(
-               $channel,
-            ...$messages
+            $channel,
+            $messages
         );
     }
 
@@ -37,20 +37,11 @@ final class MessageCollection
     }
 
     /**
-     * @return int[]
+     * @return Message[]
      */
-    public function getKeys(): array
+    public function getMessages(): array
     {
-        return array_keys($this->messages);
-    }
-
-    public function getMessageData(int $index): array
-    {
-        if (array_key_exists($index, $this->messages) === false) {
-            throw new KeyDoesNotExistException("Kes: [{$index}] does not exist in collection");
-        }
-
-        return $this->messages[$index]->toArray();
+        return $this->messages;
     }
 
     public function getChannel(): string

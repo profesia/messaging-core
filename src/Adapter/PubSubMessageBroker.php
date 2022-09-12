@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Profesia\MessagingCore\Adapter;
 
 use Google\Cloud\Core\Exception\ServiceException;
+use Profesia\MessagingCore\Broking\Dto\DispatchedMessage;
 use Profesia\MessagingCore\Broking\Dto\MessageCollection;
-use Profesia\MessagingCore\Broking\Dto\MessageStatus;
+use Profesia\MessagingCore\Broking\Dto\BrokingStatus;
 use Profesia\MessagingCore\Broking\Dto\BrokingBatchResponse;
 
 class PubSubMessageBroker extends AbstractPubSubMessageBroker
@@ -15,18 +16,24 @@ class PubSubMessageBroker extends AbstractPubSubMessageBroker
     {
         $topic = $this->getTopic($collection->getChannel());
 
-        $statuses = [];
-        foreach ($collection->getMessagesData() as $key => $messageData) {
+        $dispatchedMessages = [];
+        foreach ($collection->getMessages() as $key => $message) {
             try {
-                $topic->publish($messageData);
-                $statuses[$key] = new MessageStatus(true);
+                $topic->publish($message->toArray());
+                $dispatchedMessages[$key] = new DispatchedMessage(
+                    $message,
+                    new BrokingStatus(true)
+                );
             } catch (ServiceException $e) {
-                $statuses[$key] = new MessageStatus(false, $e->getMessage());
+                $dispatchedMessages[$key] = new DispatchedMessage(
+                    $message,
+                    new BrokingStatus(false, $e->getMessage())
+                );
             }
         }
 
-        return BrokingBatchResponse::createFromMessageStatuses(
-            ...$statuses
+        return BrokingBatchResponse::createForMessagesWithIndividualStatus(
+            ...$dispatchedMessages
         );
     }
 }

@@ -13,22 +13,23 @@ final class PubSubBatchMessageBroker extends AbstractPubSubMessageBroker
     public function publish(MessageCollection $collection): BrokingBatchResponse
     {
         $topic = $this->getTopic($collection->getChannel());
+        $messages = $collection->getMessages();
 
-        $messagesKeys = $collection->getKeys();
         try {
             $topic->publishBatch(
                 $collection->getMessagesData()
             );
 
-            return BrokingBatchResponse::createForKeys(
-                $messagesKeys,
-                true
+            return BrokingBatchResponse::createForMessagesWithBatchStatus(
+                true,
+                null,
+                ...$messages
             );
         } catch (ServiceException $e) {
-            return BrokingBatchResponse::createForKeys(
-                $messagesKeys,
+            return BrokingBatchResponse::createForMessagesWithBatchStatus(
                 false,
-                $e->getMessage()
+                $e->getMessage(),
+                ...$messages
             );
         }
     }

@@ -6,38 +6,42 @@ namespace Profesia\MessagingCore\Broking\Dto;
 
 class BrokingBatchResponse
 {
-    /** @var MessageStatus[] */
-    private array $messageStatuses;
+    /** @var DispatchedMessage[] */
+    private array $dispatchedMessages;
 
-    private function __construct(array $messageStatuses)
+
+    private function __construct(DispatchedMessage...$dispatchedMessages)
     {
-        $this->messageStatuses = $messageStatuses;
+        $this->dispatchedMessages = $dispatchedMessages;
     }
 
-    public static function createFromMessageStatuses(MessageStatus... $messageStatuses): self
+    public static function createForMessagesWithBatchStatus(bool $isSuccessful, ?string $reason = null, Message...$messages): self
     {
-        return new self(
-            $messageStatuses
-        );
-    }
-
-    public static function createForKeys(array $keys, bool $isSuccessful, ?string $reason = null): self
-    {
-        $statuses = [];
-        foreach ($keys as $key) {
-            $statuses[$key] = new MessageStatus($isSuccessful, $reason);
+        $dispatchedMessages = [];
+        foreach ($messages as $key => $message) {
+            $dispatchedMessages[$key] = new DispatchedMessage(
+                $message,
+                new BrokingStatus($isSuccessful, $reason)
+            );
         }
 
         return new self(
-            $statuses
+            ...$dispatchedMessages
+        );
+    }
+
+    public static function createForMessagesWithIndividualStatus(DispatchedMessage...$dispatchedMessages): self
+    {
+        return new self(
+            ...$dispatchedMessages
         );
     }
 
     /**
-     * @return MessageStatus[]
+     * @return DispatchedMessage[]
      */
-    public function getMessageStatuses(): array
+    public function getDispatchedMessages(): array
     {
-        return $this->messageStatuses;
+        return $this->dispatchedMessages;
     }
 }
