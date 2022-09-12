@@ -14,10 +14,11 @@ class MessageBrokerMessagesPersister implements MessageBrokerInterface
 {
     private MessageBrokerInterface $decoratedBroker;
     private DispatchedEventRepositoryInterface $repository;
-    
+
     public function __construct(MessageBrokerInterface $decoratedBroker, DispatchedEventRepositoryInterface $repository)
     {
         $this->decoratedBroker = $decoratedBroker;
+        $this->repository      = $repository;
     }
 
     /**
@@ -28,7 +29,7 @@ class MessageBrokerMessagesPersister implements MessageBrokerInterface
      */
     public function publish(MessageCollection $collection): BrokingBatchResponse
     {
-        $response =  $this->decoratedBroker->publish($collection);
+        $response = $this->decoratedBroker->publish($collection);
         $this->repository->persistBatch(
             ...$response->getDispatchedMessages()
         );

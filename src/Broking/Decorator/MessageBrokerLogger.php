@@ -37,9 +37,10 @@ final class MessageBrokerLogger implements MessageBrokerInterface
 
         foreach ($dispatchedMessages as $dispatchedMessage) {
             if ($dispatchedMessage->wasDispatchedSuccessfully() === true) {
+                $message = $dispatchedMessage->getMessage();
                 $this->logger->info(
                     "Event from {$this->projectName} was published",
-                    json_decode($dispatchedMessage->getMessage()[Message::EVENT_DATA], true)
+                    (array)json_decode($message->toArray()[Message::EVENT_DATA], true)
                 );
 
                 continue;
