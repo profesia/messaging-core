@@ -46,10 +46,9 @@ final class MessagesLogger implements MessageBrokerInterface
                 continue;
             }
 
+            $messageAttributes = $messageData[Message::EVENT_ATTRIBUTES];
             $this->logger->error(
-                "Error while publishing messages in {$this->projectName}.
-                Message: Resource - [{$messageData[Message::EVENT_TYPE]}], ID - [{$messageData[Message::EVENT_OBJECT_ID]}]
-                Cause: [{$dispatchedMessage->getDispatchReason()}]"
+                "Error while publishing messages in {$this->projectName}. Message: Resource - [{$messageAttributes[Message::EVENT_TYPE]}], ID - [{$messageAttributes[Message::EVENT_OBJECT_ID]}]. Cause: [{$dispatchedMessage->getDispatchReason()}]"
             );
         }
 

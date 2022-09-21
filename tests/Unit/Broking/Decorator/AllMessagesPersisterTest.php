@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-
 namespace Profesia\MessagingCore\Unit\Broking\Decorator;
 
 use Mockery;
-use Mockery\MockInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery\MockInterface;
 use Profesia\MessagingCore\Broking\Decorator\AllMessagesPersister;
 use Profesia\MessagingCore\Broking\Dto\BrokingBatchResponse;
 use Profesia\MessagingCore\Broking\Dto\MessageCollection;
