@@ -4,16 +4,24 @@ declare(strict_types=1);
 
 namespace Profesia\MessagingCore\Adapter;
 
-use Google\Cloud\Core\Exception\ServiceException;
+use Google\Cloud\Core\Exception\GoogleException;
 use Profesia\MessagingCore\Broking\Dto\MessageCollection;
 use Profesia\MessagingCore\Broking\Dto\BrokingBatchResponse;
+use Profesia\MessagingCore\Broking\Exception\MessageBrokerRuntimeException;
 
 final class PubSubBatchMessageBroker extends AbstractPubSubMessageBroker
 {
     public function publish(MessageCollection $collection): BrokingBatchResponse
     {
-        $topic = $this->getTopic($collection->getChannel());
-        $messages = $collection->getMessages();
+        try {
+            $topic = $this->getTopic($collection->getChannel());
+        } catch (MessageBrokerRuntimeException $e) {
+            return BrokingBatchResponse::createForMessagesWithBatchStatus(
+                   false,
+                   $e->getMessage(),
+                ...$collection->getMessages()
+            );
+        }
 
         try {
             $topic->publishBatch(
@@ -23,13 +31,13 @@ final class PubSubBatchMessageBroker extends AbstractPubSubMessageBroker
             return BrokingBatchResponse::createForMessagesWithBatchStatus(
                 true,
                 null,
-                ...$messages
+                ...$collection->getMessages()
             );
-        } catch (ServiceException $e) {
+        } catch (GoogleException $e) {
             return BrokingBatchResponse::createForMessagesWithBatchStatus(
                 false,
                 $e->getMessage(),
-                ...$messages
+                ...$collection->getMessages()
             );
         }
     }

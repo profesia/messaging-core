@@ -11,7 +11,7 @@ use Profesia\MessagingCore\Broking\Exception\AbstractMessageBrokerException;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Psr\Log\LoggerInterface;
 
-final class MessageBrokerLogger implements MessageBrokerInterface
+final class MessagesLogger implements MessageBrokerInterface
 {
     private MessageBrokerInterface $decoratedBroker;
     private LoggerInterface $logger;

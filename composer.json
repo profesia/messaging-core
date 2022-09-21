@@ -8,6 +8,11 @@
             "Profesia\\MessagingCore\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Profesia\\MessagingCore\\Test\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Matej Bádal",

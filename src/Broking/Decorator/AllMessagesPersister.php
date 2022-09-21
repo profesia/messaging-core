@@ -10,7 +10,7 @@ use Profesia\MessagingCore\Broking\Exception\AbstractMessageBrokerException;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Profesia\MessagingCore\Persistence\DispatchedEventRepositoryInterface;
 
-class MessageBrokerMessagesPersister implements MessageBrokerInterface
+class AllMessagesPersister implements MessageBrokerInterface
 {
     private MessageBrokerInterface $decoratedBroker;
     private DispatchedEventRepositoryInterface $repository;
