@@ -10,11 +10,11 @@ use Google\Cloud\PubSub\Topic;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
-use Profesia\MessagingCore\Adapter\PubSubMessageBroker;
+use Profesia\MessagingCore\Adapter\PubSubBatchMessageBroker;
 use Profesia\MessagingCore\Broking\Dto\MessageCollection;
 use Profesia\MessagingCore\Test\Unit\Helper;
 
-class PubSubMessageBrokerTest extends MockeryTestCase
+class PubSubBatchMessageBrokerTest extends MockeryTestCase
 {
     use Helper;
 
@@ -24,8 +24,8 @@ class PubSubMessageBrokerTest extends MockeryTestCase
         $pubSubClient = Mockery::mock(PubSubClient::class);
 
         /** @var Topic|MockInterface $topic */
-        $topic = Mockery::mock(Topic::class);
-        $broker = new PubSubMessageBroker(
+        $topic  = Mockery::mock(Topic::class);
+        $broker = new PubSubBatchMessageBroker(
             $pubSubClient
         );
 
@@ -54,16 +54,14 @@ class PubSubMessageBrokerTest extends MockeryTestCase
             ->once()
             ->andReturn(true);
 
-        foreach ($messages as $message) {
-            $topic
-                ->shouldReceive('publish')
-                ->once()
-                ->withArgs(
-                    [
-                        $message->toArray(),
-                    ]
-                );
-        }
+        $topic
+            ->shouldReceive('publishBatch')
+            ->once()
+            ->withArgs(
+                [
+                    $messageCollection->getMessagesData(),
+                ]
+            );
 
         $response = $broker->publish($messageCollection);
 
@@ -79,8 +77,8 @@ class PubSubMessageBrokerTest extends MockeryTestCase
         $pubSubClient = Mockery::mock(PubSubClient::class);
 
         /** @var Topic|MockInterface $topic */
-        $topic = Mockery::mock(Topic::class);
-        $broker = new PubSubMessageBroker(
+        $topic  = Mockery::mock(Topic::class);
+        $broker = new PubSubBatchMessageBroker(
             $pubSubClient
         );
 
@@ -107,7 +105,7 @@ class PubSubMessageBrokerTest extends MockeryTestCase
 
         $response = $broker->publish(
             MessageCollection::createFromMessagesAndChannel(
-                $channel,
+                   $channel,
                 ...$messages
             )
         );
@@ -127,7 +125,7 @@ class PubSubMessageBrokerTest extends MockeryTestCase
         /** @var Topic|MockInterface $topic */
         $topic = Mockery::mock(Topic::class);
 
-        $broker = new PubSubMessageBroker(
+        $broker = new PubSubBatchMessageBroker(
             $pubSubClient
         );
 
@@ -156,48 +154,22 @@ class PubSubMessageBrokerTest extends MockeryTestCase
             ->once()
             ->andReturn(true);
 
-        $index = 1;
-        foreach ($messages as $message) {
-            if ($index !== 2) {
-                $topic
-                    ->shouldReceive('publish')
-                    ->once()
-                    ->withArgs(
-                        [
-                            $message->toArray(),
-                        ]
-                    );
-            } else {
-                $topic
-                    ->shouldReceive('publish')
-                    ->once()
-                    ->withArgs(
-                        [
-                            $message->toArray(),
-                        ]
-                    )
-                    ->andThrow(
-                        new GoogleException('Testing exception')
-                    );
-            }
-
-            $index++;
-        }
+        $topic
+            ->shouldReceive('publishBatch')
+            ->once()
+            ->withArgs(
+                [
+                    $messageCollection->getMessagesData(),
+                ]
+            )
+            ->andThrow(new GoogleException('Testing exception'));
 
         $response = $broker->publish($messageCollection);
 
-        $index = 1;
         foreach ($response->getDispatchedMessages() as $key => $dispatchedMessage) {
-            if ($index !== 2) {
-                $this->assertTrue($dispatchedMessage->wasDispatchedSuccessfully());
-                $this->assertEquals($dispatchedMessage->getMessage(), $messages[$key]);
-            } else {
-                $this->assertFalse($dispatchedMessage->wasDispatchedSuccessfully());
-                $this->assertEquals($dispatchedMessage->getMessage(), $messages[$key]);
-                $this->assertEquals($dispatchedMessage->getDispatchReason(), 'Testing exception');
-            }
-
-            $index++;
+            $this->assertFalse($dispatchedMessage->wasDispatchedSuccessfully());
+            $this->assertEquals($dispatchedMessage->getMessage(), $messages[$key]);
+            $this->assertEquals($dispatchedMessage->getDispatchReason(), 'Testing exception');
         }
     }
 }

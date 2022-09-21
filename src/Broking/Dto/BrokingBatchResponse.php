@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Profesia\MessagingCore\Broking\Dto;
 
-class BrokingBatchResponse
+final class BrokingBatchResponse
 {
     /** @var DispatchedMessage[] */
     private array $dispatchedMessages;

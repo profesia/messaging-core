@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Profesia\MessagingCore\Broking\Dto;
 
-class BrokingStatus
+final class BrokingStatus
 {
     private bool $isSuccessful;
     private ?string $reason;

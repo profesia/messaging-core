@@ -36,18 +36,20 @@ final class MessagesLogger implements MessageBrokerInterface
         $dispatchedMessages = $response->getDispatchedMessages();
 
         foreach ($dispatchedMessages as $dispatchedMessage) {
+            $messageData = $dispatchedMessage->getMessage()->toArray();
             if ($dispatchedMessage->wasDispatchedSuccessfully() === true) {
-                $message = $dispatchedMessage->getMessage();
                 $this->logger->info(
-                    "Event from {$this->projectName} was published",
-                    (array)json_decode($message->toArray()[Message::EVENT_DATA], true)
+                    "Message from {$this->projectName} was published",
+                    (array)json_decode($messageData[Message::EVENT_DATA], true)
                 );
 
                 continue;
             }
 
             $this->logger->error(
-                "Error while publishing messages in {$this->projectName}. Cause: [{$dispatchedMessage->getDispatchReason()}]"
+                "Error while publishing messages in {$this->projectName}.
+                Message: Resource - [{$messageData[Message::EVENT_TYPE]}], ID - [{$messageData[Message::EVENT_OBJECT_ID]}]
+                Cause: [{$dispatchedMessage->getDispatchReason()}]"
             );
         }
 

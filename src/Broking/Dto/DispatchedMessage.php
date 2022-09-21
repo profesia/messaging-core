@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Profesia\MessagingCore\Broking\Dto;
 
-class DispatchedMessage
+final class DispatchedMessage
 {
     private Message $message;
     private BrokingStatus $status;
