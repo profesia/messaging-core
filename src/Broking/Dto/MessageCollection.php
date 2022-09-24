@@ -6,14 +6,10 @@ namespace Profesia\MessagingCore\Broking\Dto;
 
 final class MessageCollection
 {
-    /** @var Message[] */
-    private array $messages;
-    private string $channel;
-
-    private function __construct(string $channel, array $messages)
+    private function __construct(
+        private string $channel,
+        private array $messages)
     {
-        $this->messages = $messages;
-        $this->channel  = $channel;
     }
 
     public static function createFromMessagesAndChannel(string $channel, Message... $messages): MessageCollection

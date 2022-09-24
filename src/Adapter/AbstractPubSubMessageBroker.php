@@ -11,11 +11,9 @@ use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 
 abstract class AbstractPubSubMessageBroker implements MessageBrokerInterface
 {
-    private PubSubClient $pubSubClient;
-
-    public function __construct(PubSubClient $pubSubClient)
+    public function __construct(
+        private PubSubClient $pubSubClient)
     {
-        $this->pubSubClient = $pubSubClient;
     }
 
     /**

@@ -9,7 +9,6 @@ final class BrokingBatchResponse
     /** @var DispatchedMessage[] */
     private array $dispatchedMessages;
 
-
     private function __construct(DispatchedMessage...$dispatchedMessages)
     {
         $this->dispatchedMessages = $dispatchedMessages;

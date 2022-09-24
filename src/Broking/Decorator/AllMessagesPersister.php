@@ -12,13 +12,11 @@ use Profesia\MessagingCore\Persistence\DispatchedEventRepositoryInterface;
 
 class AllMessagesPersister implements MessageBrokerInterface
 {
-    private MessageBrokerInterface $decoratedBroker;
-    private DispatchedEventRepositoryInterface $repository;
 
-    public function __construct(MessageBrokerInterface $decoratedBroker, DispatchedEventRepositoryInterface $repository)
+    public function __construct(
+        private MessageBrokerInterface $decoratedBroker,
+        private DispatchedEventRepositoryInterface $repository)
     {
-        $this->decoratedBroker = $decoratedBroker;
-        $this->repository      = $repository;
     }
 
     /**
