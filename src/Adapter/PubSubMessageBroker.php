@@ -23,7 +23,7 @@ final class PubSubMessageBroker implements MessageBrokerInterface
 
     public function publish(MessageCollection $collection): BrokingBatchResponse
     {
-        $topic = $this->pubSubClient->topic($collection->getChannel());
+        $topic              = $this->pubSubClient->topic($collection->getChannel());
         $dispatchedMessages = [];
         foreach ($collection->getMessages() as $key => $message) {
             try {
