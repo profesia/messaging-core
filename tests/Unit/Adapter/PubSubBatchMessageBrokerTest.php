@@ -50,11 +50,6 @@ class PubSubBatchMessageBrokerTest extends MockeryTestCase
             );
 
         $topic
-            ->shouldReceive('exists')
-            ->once()
-            ->andReturn(true);
-
-        $topic
             ->shouldReceive('publishBatch')
             ->once()
             ->withArgs(
@@ -68,52 +63,6 @@ class PubSubBatchMessageBrokerTest extends MockeryTestCase
         foreach ($response->getDispatchedMessages() as $key => $dispatchedMessage) {
             $this->assertTrue($dispatchedMessage->wasDispatchedSuccessfully());
             $this->assertEquals($dispatchedMessage->getMessage(), $messages[$key]);
-        }
-    }
-
-    public function testCanFindNonExistingTopic(): void
-    {
-        /** @var PubSubClient|MockInterface $pubSubClient */
-        $pubSubClient = Mockery::mock(PubSubClient::class);
-
-        /** @var Topic|MockInterface $topic */
-        $topic  = Mockery::mock(Topic::class);
-        $broker = new PubSubBatchMessageBroker(
-            $pubSubClient
-        );
-
-        $channel  = 'channel';
-        $messages = static::createMessages(3);
-
-        $pubSubClient
-            ->shouldReceive('topic')
-            ->once()
-            ->withArgs(
-                [
-                    $channel,
-                ]
-            )
-            ->andReturn(
-                $topic
-            );
-
-        $topic
-            ->shouldReceive('exists')
-            ->once()
-            ->andReturn(false);
-
-
-        $response = $broker->publish(
-            MessageCollection::createFromMessagesAndChannel(
-                   $channel,
-                ...$messages
-            )
-        );
-
-        foreach ($response->getDispatchedMessages() as $key => $dispatchedMessage) {
-            $this->assertFalse($dispatchedMessage->wasDispatchedSuccessfully());
-            $this->assertEquals($dispatchedMessage->getMessage(), $messages[$key]);
-            $this->assertEquals($dispatchedMessage->getDispatchReason(), "Topic with name: [{$channel}] does not exist");
         }
     }
 
@@ -150,11 +99,6 @@ class PubSubBatchMessageBrokerTest extends MockeryTestCase
             );
 
         $topic
-            ->shouldReceive('exists')
-            ->once()
-            ->andReturn(true);
-
-        $topic
             ->shouldReceive('publishBatch')
             ->once()
             ->withArgs(
@@ -168,8 +112,8 @@ class PubSubBatchMessageBrokerTest extends MockeryTestCase
 
         foreach ($response->getDispatchedMessages() as $key => $dispatchedMessage) {
             $this->assertFalse($dispatchedMessage->wasDispatchedSuccessfully());
-            $this->assertEquals($dispatchedMessage->getMessage(), $messages[$key]);
-            $this->assertEquals($dispatchedMessage->getDispatchReason(), 'Testing exception');
+            $this->assertEquals($messages[$key], $dispatchedMessage->getMessage());
+            $this->assertEquals('Testing exception', $dispatchedMessage->getDispatchReason());
         }
     }
 }
