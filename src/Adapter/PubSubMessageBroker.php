@@ -5,26 +5,25 @@ declare(strict_types=1);
 namespace Profesia\MessagingCore\Adapter;
 
 use Google\Cloud\Core\Exception\GoogleException;
+use Google\Cloud\PubSub\PubSubClient;
 use Profesia\MessagingCore\Broking\Dto\DispatchedMessage;
 use Profesia\MessagingCore\Broking\Dto\MessageCollection;
 use Profesia\MessagingCore\Broking\Dto\BrokingStatus;
 use Profesia\MessagingCore\Broking\Dto\BrokingBatchResponse;
-use Profesia\MessagingCore\Broking\Exception\MessageBrokerRuntimeException;
+use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 
-class PubSubMessageBroker extends AbstractPubSubMessageBroker
+final class PubSubMessageBroker implements MessageBrokerInterface
 {
+    private PubSubClient $pubSubClient;
+
+    public function __construct(PubSubClient $pubSubClient)
+    {
+        $this->pubSubClient = $pubSubClient;
+    }
+
     public function publish(MessageCollection $collection): BrokingBatchResponse
     {
-        try {
-            $topic = $this->getTopic($collection->getChannel());
-        } catch (MessageBrokerRuntimeException $e) {
-            return BrokingBatchResponse::createForMessagesWithBatchStatus(
-                false,
-                $e->getMessage(),
-                ...$collection->getMessages()
-            );
-        }
-
+        $topic              = $this->pubSubClient->topic($collection->getChannel());
         $dispatchedMessages = [];
         foreach ($collection->getMessages() as $key => $message) {
             try {
@@ -36,7 +35,10 @@ class PubSubMessageBroker extends AbstractPubSubMessageBroker
             } catch (GoogleException $e) {
                 $dispatchedMessages[$key] = new DispatchedMessage(
                     $message,
-                    new BrokingStatus(false, $e->getMessage())
+                    new BrokingStatus(
+                        false,
+                        $e->getMessage()
+                    )
                 );
             }
         }
