@@ -12,11 +12,9 @@ use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 
 final class PubSubBatchMessageBroker implements MessageBrokerInterface
 {
-    private PubSubClient $pubSubClient;
-
-    public function __construct(PubSubClient $pubSubClient)
-    {
-        $this->pubSubClient = $pubSubClient;
+    public function __construct(
+        private PubSubClient $pubSubClient
+    ) {
     }
 
     public function publish(MessageCollection $collection): BrokingBatchResponse
@@ -28,14 +26,14 @@ final class PubSubBatchMessageBroker implements MessageBrokerInterface
             );
 
             return BrokingBatchResponse::createForMessagesWithBatchStatus(
-                true,
-                null,
+                   true,
+                   null,
                 ...$collection->getMessages()
             );
         } catch (GoogleException $e) {
             return BrokingBatchResponse::createForMessagesWithBatchStatus(
-                false,
-                $e->getMessage(),
+                   false,
+                   $e->getMessage(),
                 ...$collection->getMessages()
             );
         }

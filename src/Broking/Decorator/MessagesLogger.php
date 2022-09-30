@@ -15,8 +15,8 @@ final class MessagesLogger implements MessageBrokerInterface
     public function __construct(
         private MessageBrokerInterface $decoratedBroker,
         private LoggerInterface $logger,
-        private string $projectName)
-    {
+        private string $projectName
+    ) {
     }
 
     /**

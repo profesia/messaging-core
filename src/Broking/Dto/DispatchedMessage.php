@@ -9,8 +9,7 @@ final class DispatchedMessage
     public function __construct(
         private Message $message,
         private BrokingStatus $status
-    )
-    {
+    ) {
     }
 
     public function getMessage(): Message

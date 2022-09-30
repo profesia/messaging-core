@@ -8,11 +8,11 @@ final class MessageCollection
 {
     private function __construct(
         private string $channel,
-        private array $messages)
-    {
+        private array $messages
+    ) {
     }
 
-    public static function createFromMessagesAndChannel(string $channel, Message... $messages): MessageCollection
+    public static function createFromMessagesAndChannel(string $channel, Message...$messages): MessageCollection
     {
         return new self(
             $channel,
