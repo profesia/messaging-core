@@ -18,7 +18,6 @@ final class Message
     public const EVENT_ATTRIBUTES     = 'attributes';
     public const MESSAGE_PAYLOAD      = 'payload';
     public const EVENT_DATA           = 'data';
-    public const EVENT_VERSION        = 'version';
 
     private string $resource;
     private string $eventType;
@@ -27,7 +26,6 @@ final class Message
     private DateTimeImmutable $occurredOn;
     private string $correlationId;
     private string $target;
-    private string $version;
     private array $payload;
 
     public function __construct(
@@ -38,7 +36,6 @@ final class Message
         DateTimeImmutable $occurredOn,
         string $correlationId,
         string $target,
-        string $version,
         array $payload
     ) {
         $this->resource      = $resource;
@@ -48,7 +45,6 @@ final class Message
         $this->occurredOn    = $occurredOn;
         $this->correlationId = $correlationId;
         $this->target        = $target;
-        $this->version       = $version;
         $this->payload       = $payload;
     }
 
@@ -62,7 +58,6 @@ final class Message
             self::EVENT_OCCURRED_ON    => $this->occurredOn->format('Y-m-d H:i:s.u'),
             self::EVENT_CORRELATION_ID => $this->correlationId,
             self::EVENT_TARGET         => $this->target,
-            self::EVENT_VERSION        => $this->version,
         ];
 
         return [

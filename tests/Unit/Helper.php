@@ -26,7 +26,6 @@ trait Helper
                 new DateTimeImmutable(),
                 'correlationId',
                 "target{$i}",
-                "{$i}",
                 [
                     'data' => $i,
                 ]
