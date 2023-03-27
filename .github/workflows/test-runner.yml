@@ -16,8 +16,13 @@ jobs:
 
     runs-on: ubuntu-18.04
     steps:
+      - name: 'Prepare PHP'
+        uses: nanasess/setup-php@v3
+        with:
+          php-version: '7.4'
+
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
