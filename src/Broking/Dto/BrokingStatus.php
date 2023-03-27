@@ -6,10 +6,15 @@ namespace Profesia\MessagingCore\Broking\Dto;
 
 final class BrokingStatus
 {
+    private bool $isSuccessful;
+    private ?string $reason = null;
+
     public function __construct(
-        private bool $isSuccessful,
-        private ?string $reason = null
+        bool $isSuccessful,
+        ?string $reason = null
     ) {
+        $this->isSuccessful = $isSuccessful;
+        $this->reason       = $reason;
     }
 
     public function isSuccessful(): bool

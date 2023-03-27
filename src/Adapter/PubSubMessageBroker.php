@@ -14,9 +14,12 @@ use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 
 final class PubSubMessageBroker implements MessageBrokerInterface
 {
+    private PubSubClient $pubSubClient;
+
     public function __construct(
-        private PubSubClient $pubSubClient
+        PubSubClient $pubSubClient
     ) {
+        $this->pubSubClient = $pubSubClient;
     }
 
     public function publish(MessageCollection $collection): BrokingBatchResponse
