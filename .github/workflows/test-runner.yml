@@ -4,13 +4,15 @@ on:
   push:
     branches:
       - master
-      - /^v\d+\.\d+\.\d+/
+      - 'feature/**'
+    tags:
+      - 'v*.*.*'
 
 jobs:
   build:
     strategy:
       matrix:
-        php: [7.4, 8.0, 8.1]
+        php: [7.4]
 
     runs-on: ubuntu-latest
     steps:
