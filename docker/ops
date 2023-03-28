@@ -9,7 +9,7 @@ print_help () {
     down            - shut containers down
     php             - run PHP script
     bash            - run shell command inside container
-    container           - ren interactive container
+    container       - open interactive container
     "
     exit 1
 }
@@ -28,22 +28,23 @@ COMPOSE="docker-compose"
 
 case "$1" in
   up)
-    ${COMPOSE} down --remove-orphans && ${COMPOSE} pull && ${COMPOSE} up -d
+    shift 1
+    ${COMPOSE} down --remove-orphans && ${COMPOSE} pull && ${COMPOSE} up "$@"
     ;;
   down)
     ${COMPOSE} down --remove-orphans
     ;;
   php)
     shift 1
-    ${COMPOSE} exec php bash -c "php $*"
+    ${COMPOSE} exec messaging_core bash -c "php $*"
     ;;
   bash)
     shift 1
-    ${COMPOSE} exec php bash -c "$*"
+    ${COMPOSE} exec messaging_core bash -c "$*"
     ;;
   container)
         shift 1
-        ${COMPOSE} exec php "$@"
+        ${COMPOSE} exec messaging_core "$@"
         ;;
   *)
     print_help
