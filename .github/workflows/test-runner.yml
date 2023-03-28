@@ -12,14 +12,14 @@ jobs:
   build:
     strategy:
       matrix:
-        php: [7.4]
+        php: [7.4, 8.0, 8.1]
 
     runs-on: ubuntu-18.04
     steps:
-      - name: 'Prepare PHP'
+      - name: Prepare PHP
         uses: nanasess/setup-php@v3
         with:
-          php-version: '7.4'
+          php-version: ${ matrix.php }}
 
       - name: Checkout code
         uses: actions/checkout@v3
