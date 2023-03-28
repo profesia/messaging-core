@@ -14,12 +14,12 @@ jobs:
       matrix:
         php: [7.4, 8.0, 8.1]
 
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: Prepare PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${ matrix.php }}
+          php-version: ${{ matrix.php }}
 
       - name: Checkout code
         uses: actions/checkout@v3
