@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - name: Prepare PHP
-        uses: nanasess/setup-php@v3
+        uses: shivammathur/setup-php@v2
         with:
           php-version: ${ matrix.php }}
 
