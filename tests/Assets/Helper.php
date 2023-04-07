@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Profesia\MessagingCore\Test\Unit;
+namespace Profesia\MessagingCore\Test\Assets;
 
-use Profesia\MessagingCore\Broking\Dto\Message;
 use DateTimeImmutable;
+use Profesia\MessagingCore\Broking\Dto\Message;
 
 trait Helper
 {

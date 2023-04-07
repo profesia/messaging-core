@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Profesia\MessagingCore\Unit\Broking\Decorator;
 
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use Profesia\MessagingCore\Broking\Decorator\FailedMessagesPersister;
@@ -13,8 +14,7 @@ use Profesia\MessagingCore\Broking\Dto\DispatchedMessage;
 use Profesia\MessagingCore\Broking\Dto\MessageCollection;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Profesia\MessagingCore\Persistence\DispatchedEventRepositoryInterface;
-use Profesia\MessagingCore\Test\Unit\Helper;
-use Mockery;
+use Profesia\MessagingCore\Test\Assets\Helper;
 
 class FailedMessagesPersisterTest extends MockeryTestCase
 {

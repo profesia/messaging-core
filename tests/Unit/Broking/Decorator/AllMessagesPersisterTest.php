@@ -12,7 +12,7 @@ use Profesia\MessagingCore\Broking\Dto\BrokingBatchResponse;
 use Profesia\MessagingCore\Broking\Dto\MessageCollection;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Profesia\MessagingCore\Persistence\DispatchedEventRepositoryInterface;
-use Profesia\MessagingCore\Test\Unit\Helper;
+use Profesia\MessagingCore\Test\Assets\Helper;
 
 class AllMessagesPersisterTest extends MockeryTestCase
 {

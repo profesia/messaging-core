@@ -37,15 +37,16 @@ final class Message
         string $correlationId,
         string $target,
         array $payload
-    ) {
-        $this->resource      = $resource;
-        $this->eventType     = $eventType;
-        $this->provider      = $provider;
-        $this->objectId      = $objectId;
-        $this->occurredOn    = $occurredOn;
+    )
+    {
+        $this->resource = $resource;
+        $this->eventType = $eventType;
+        $this->provider = $provider;
+        $this->objectId = $objectId;
+        $this->occurredOn = $occurredOn;
         $this->correlationId = $correlationId;
-        $this->target        = $target;
-        $this->payload       = $payload;
+        $this->target = $target;
+        $this->payload = $payload;
     }
 
     public function toArray(): array

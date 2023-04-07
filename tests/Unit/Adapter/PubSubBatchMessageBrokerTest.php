@@ -12,7 +12,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use Profesia\MessagingCore\Adapter\PubSubBatchMessageBroker;
 use Profesia\MessagingCore\Broking\Dto\MessageCollection;
-use Profesia\MessagingCore\Test\Unit\Helper;
+use Profesia\MessagingCore\Test\Assets\Helper;
 
 class PubSubBatchMessageBrokerTest extends MockeryTestCase
 {

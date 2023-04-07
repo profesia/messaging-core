@@ -14,7 +14,7 @@ use Profesia\MessagingCore\Broking\Dto\DispatchedMessage;
 use Profesia\MessagingCore\Broking\Dto\Message;
 use Profesia\MessagingCore\Broking\Dto\MessageCollection;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
-use Profesia\MessagingCore\Test\Unit\Helper;
+use Profesia\MessagingCore\Test\Assets\Helper;
 use Psr\Log\LoggerInterface;
 
 class MessagesLoggerTest extends MockeryTestCase
