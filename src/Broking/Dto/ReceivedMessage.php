@@ -50,6 +50,6 @@ class ReceivedMessage
 
     public function getDecodedMessage(): array
     {
-        return $this->message;
+        return $this->message['message'];
     }
 }
