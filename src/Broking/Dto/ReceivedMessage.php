@@ -10,24 +10,34 @@ use Profesia\MessagingCore\Broking\Exception\ReceivedMessagePayloadDecodingFaile
 
 class ReceivedMessage
 {
-    private array $payload;
+    private array $message;
 
-    private function __construct(array $payload)
+    private function __construct(array $message)
     {
-        $this->payload = $payload;
+        $this->message = $message;
     }
 
     public static function createFromJsonString(string $json): self
     {
         try {
-            return new self(
+            $envelope =
                 (array)json_decode(
                     $json,
                     true,
                     512,
                     JSON_THROW_ON_ERROR
-                )
+                );
+
+            $envelope['message'][Message::EVENT_DATA] = (array)json_decode(
+                base64_decode(
+                    $envelope['message'][Message::EVENT_DATA]
+                ),
+                true,
+                512,
+                JSON_THROW_ON_ERROR
             );
+
+            return new self($envelope);
         } catch (JsonException $e) {
             throw new ReceivedMessageDecodingFailedException("Failed to decode received message. Cause: [{$e->getMessage()}]");
         }
@@ -35,23 +45,11 @@ class ReceivedMessage
 
     public function getEventType(): string
     {
-        return $this->payload['message'][Message::EVENT_ATTRIBUTES][Message::EVENT_TYPE];
+        return $this->message['message'][Message::EVENT_ATTRIBUTES][Message::EVENT_TYPE];
     }
 
-    public function decodePayload(): array
+    public function getDecodedMessage(): array
     {
-        try {
-            return
-                (array)json_decode(
-                    base64_decode(
-                        $this->payload['message'][Message::EVENT_DATA]
-                    ),
-                    true,
-                    512,
-                    JSON_THROW_ON_ERROR
-                );
-        } catch (JsonException $e) {
-            throw new ReceivedMessagePayloadDecodingFailedException("Failed to decode received message payload. Cause: [{$e->getMessage()}]");
-        }
+        return $this->message;
     }
 }
