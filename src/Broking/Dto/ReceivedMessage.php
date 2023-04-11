@@ -44,7 +44,7 @@ class ReceivedMessage
             return
                 (array)json_decode(
                     base64_decode(
-                        $this->payload['message']
+                        $this->payload['message'][Message::EVENT_DATA]
                     ),
                     true,
                     512,
