@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - 'feature/**'
+      - 'bug/**'
     tags:
       - 'v*.*.*'
 
