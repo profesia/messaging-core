@@ -10,6 +10,8 @@ use Profesia\MessagingCore\Broking\Exception\ReceivedMessageDecodingFailedExcept
 
 final class PubSubReceivedMessage implements ReceivedMessageInterface
 {
+    private const MESSAGE_KEY = 'message';
+
     private array $message;
 
     private function __construct(array $message)
@@ -19,7 +21,7 @@ final class PubSubReceivedMessage implements ReceivedMessageInterface
 
     public static function createFromJsonString(string $json): self
     {
-        $messageKey = 'message';
+        $messageKey = self::MESSAGE_KEY;
         try {
             $envelope =
                 (array)json_decode(
@@ -65,11 +67,16 @@ final class PubSubReceivedMessage implements ReceivedMessageInterface
 
     public function getEventType(): string
     {
-        return $this->message['message'][Message::EVENT_ATTRIBUTES][Message::EVENT_TYPE];
+        return $this->message[self::MESSAGE_KEY][Message::EVENT_ATTRIBUTES][Message::EVENT_TYPE];
+    }
+
+    public function getSubscribeName(): string
+    {
+        return $this->message[self::MESSAGE_KEY][Message::EVENT_ATTRIBUTES][Message::EVENT_SUBSCRIBE_NAME];
     }
 
     public function getDecodedMessage(): array
     {
-        return $this->message['message'];
+        return $this->message[self::MESSAGE_KEY];
     }
 }

@@ -74,25 +74,28 @@ class PubSubReceivedMessageTest extends TestCase
         PubSubReceivedMessage::createFromJsonString($json);
     }
 
-    public function testCanCreate(): void
+    public function testCanGetValues(): void
     {
-        $data      = [
+        $data           = [
             'a' => 1,
             'b' => 2,
             'c' => 3
         ];
-        $eventType = 'TestEventTYpe';
-        $message   = [
+        $eventType      = 'TestEventType';
+        $subscriberName = 'SubscriberName';
+
+        $message = [
             Message::EVENT_DATA       => base64_encode(
                 json_encode(
                     $data
                 )
             ),
             Message::EVENT_ATTRIBUTES => [
-                Message::EVENT_TYPE => $eventType
+                Message::EVENT_TYPE           => $eventType,
+                Message::EVENT_SUBSCRIBE_NAME => $subscriberName
             ]
         ];
-        $json      = json_encode(
+        $json    = json_encode(
             [
                 'message' => $message
             ]
@@ -100,6 +103,7 @@ class PubSubReceivedMessageTest extends TestCase
 
         $receivedMessage = PubSubReceivedMessage::createFromJsonString($json);
         $this->assertEquals($eventType, $receivedMessage->getEventType());
+        $this->assertEquals($subscriberName, $receivedMessage->getSubscribeName());
 
         $decodedMessage                      = $message;
         $decodedMessage[Message::EVENT_DATA] = json_decode(base64_decode($message[Message::EVENT_DATA]), true);

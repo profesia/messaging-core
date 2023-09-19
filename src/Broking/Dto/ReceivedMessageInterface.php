@@ -8,5 +8,7 @@ interface ReceivedMessageInterface
 {
     public function getEventType(): string;
 
+    public function getSubscribeName(): string;
+
     public function getDecodedMessage(): array;
 }

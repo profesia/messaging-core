@@ -26,6 +26,7 @@ trait Helper
                 new DateTimeImmutable(),
                 'correlationId',
                 "target{$i}",
+                "subscribeName{$i}",
                 [
                     'data' => $i,
                 ]

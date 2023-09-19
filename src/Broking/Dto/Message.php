@@ -18,15 +18,17 @@ final class Message
     public const EVENT_ATTRIBUTES     = 'attributes';
     public const MESSAGE_PAYLOAD      = 'payload';
     public const EVENT_DATA           = 'data';
+    public const EVENT_SUBSCRIBE_NAME = 'subscribeName';
 
-    private string $resource;
-    private string $eventType;
-    private string $provider;
-    private string $objectId;
+    private string            $resource;
+    private string            $eventType;
+    private string            $provider;
+    private string            $objectId;
     private DateTimeImmutable $occurredOn;
-    private string $correlationId;
-    private string $target;
-    private array $payload;
+    private string            $correlationId;
+    private string            $target;
+    private string            $subscribeName;
+    private array             $payload;
 
     public function __construct(
         string $resource,
@@ -36,17 +38,19 @@ final class Message
         DateTimeImmutable $occurredOn,
         string $correlationId,
         string $target,
+        string $subscribeName,
         array $payload
     )
     {
-        $this->resource = $resource;
-        $this->eventType = $eventType;
-        $this->provider = $provider;
-        $this->objectId = $objectId;
-        $this->occurredOn = $occurredOn;
+        $this->resource      = $resource;
+        $this->eventType     = $eventType;
+        $this->provider      = $provider;
+        $this->objectId      = $objectId;
+        $this->occurredOn    = $occurredOn;
         $this->correlationId = $correlationId;
-        $this->target = $target;
-        $this->payload = $payload;
+        $this->target        = $target;
+        $this->subscribeName = $subscribeName;
+        $this->payload       = $payload;
     }
 
     public function toArray(): array
@@ -59,6 +63,7 @@ final class Message
             self::EVENT_OCCURRED_ON    => $this->occurredOn->format('Y-m-d H:i:s.u'),
             self::EVENT_CORRELATION_ID => $this->correlationId,
             self::EVENT_TARGET         => $this->target,
+            self::EVENT_SUBSCRIBE_NAME => $this->subscribeName,
         ];
 
         return [
