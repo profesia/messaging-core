@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Profesia\MessagingCore\Unit\Broking\Decorator;
+namespace Profesia\MessagingCore\Test\Unit\Broking\Decorator;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
