@@ -6,7 +6,7 @@ namespace Profesia\MessagingCore\Broking\Dto;
 
 use DateTimeImmutable;
 
-final class Message
+final class Message implements MessageInterface
 {
     public const EVENT_CORRELATION_ID = 'correlationId';
     public const EVENT_TYPE           = 'eventType';
