@@ -7,4 +7,6 @@ namespace Profesia\MessagingCore\Broking\Dto;
 interface MessageInterface
 {
     public function toArray(): array;
+
+    public function isPublic(): bool;
 }

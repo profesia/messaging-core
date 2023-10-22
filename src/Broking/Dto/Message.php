@@ -29,6 +29,7 @@ final class Message implements MessageInterface
     private string            $target;
     private string            $subscribeName;
     private array             $payload;
+    private bool              $isPublic;
 
     public function __construct(
         string $resource,
@@ -39,7 +40,8 @@ final class Message implements MessageInterface
         string $correlationId,
         string $target,
         string $subscribeName,
-        array $payload
+        array $payload,
+        bool $isPublic = true
     )
     {
         $this->resource      = $resource;
@@ -51,6 +53,7 @@ final class Message implements MessageInterface
         $this->target        = $target;
         $this->subscribeName = $subscribeName;
         $this->payload       = $payload;
+        $this->isPublic      = $isPublic;
     }
 
     public function toArray(): array
@@ -72,6 +75,11 @@ final class Message implements MessageInterface
                 array_merge($attributes, [self::MESSAGE_PAYLOAD => $this->payload])
             ),
         ];
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->isPublic;
     }
 }
 
