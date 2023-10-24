@@ -24,10 +24,10 @@ class MessageTest extends TestCase
                     'target'        => 'target1',
                     'subscribeName' => 'subscribeName1',
                     'payload'       => [
-                        1
+                        1,
                     ],
-                    'isPublic'      => true,
-                ]
+                    'topicName'     => 'topicName1',
+                ],
             ],
             [
                 [
@@ -40,16 +40,17 @@ class MessageTest extends TestCase
                     'target'        => 'target2',
                     'subscribeName' => 'subscribeName2',
                     'payload'       => [
-                        2
+                        2,
                     ],
-                    'isPublic'      => false,
-                ]
-            ]
+                    'topicName'     => 'topicName2',
+                ],
+            ],
         ];
     }
 
     /**
      * @param array $data
+     *
      * @return void
      *
      * @dataProvider provideDataForDataGettingTest
@@ -66,10 +67,10 @@ class MessageTest extends TestCase
             $data['target'],
             $data['subscribeName'],
             $data['payload'],
-            $data['isPublic']
+            $data['topicName']
         );
 
-        $this->assertEquals($data['isPublic'], $message->isPublic());
+        $this->assertEquals($data['topicName'], $message->getTopic());
 
         $attributes = [
             Message::EVENT_RESOURCE       => $data['resource'],

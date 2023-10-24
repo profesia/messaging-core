@@ -74,6 +74,12 @@ class PubSubReceivedMessageTest extends TestCase
         PubSubReceivedMessage::createFromJsonString($json);
     }
 
+    public function testCanDetectInvalidRawData(): void
+    {
+        $this->expectExceptionObject(new ReceivedMessageBadStructureException("Missing offset: [eventType] in attributes"));
+        PubSubReceivedMessage::createFromRaw([], []);
+    }
+
     public function testCanGetValues(): void
     {
         $data           = [
