@@ -25,7 +25,7 @@ final class MessagesForTopic
     {
         return new self(
             $topic,
-            ...$messages
+            $messages
         );
     }
 

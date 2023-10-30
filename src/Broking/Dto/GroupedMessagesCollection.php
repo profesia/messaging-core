@@ -32,7 +32,7 @@ final class GroupedMessagesCollection
 
         $messagesForTopic = [];
         foreach ($groupedMessages as $topic => $group) {
-            $messagesForTopic[$topic] = MessagesForTopic::createFromTopicAndMessages($topic, $group);
+            $messagesForTopic[$topic] = MessagesForTopic::createFromTopicAndMessages($topic, ...$group);
         }
 
         return new self(
