@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Profesia\MessagingCore\Broking;
 
-use Profesia\MessagingCore\Broking\Dto\MessageCollection;
+use Profesia\MessagingCore\Broking\Dto\GroupedMessagesCollection;
 use Profesia\MessagingCore\Broking\Dto\BrokingBatchResponse;
 
 interface MessageBrokerInterface
 {
     /**
-     * @param MessageCollection $collection
+     * @param GroupedMessagesCollection $collection
      *
      * @return BrokingBatchResponse
      */
-    public function publish(MessageCollection $collection): BrokingBatchResponse;
+    public function publish(GroupedMessagesCollection $collection): BrokingBatchResponse;
 }

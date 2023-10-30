@@ -9,7 +9,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use Profesia\MessagingCore\Broking\Decorator\AllMessagesPersister;
 use Profesia\MessagingCore\Broking\Dto\BrokingBatchResponse;
-use Profesia\MessagingCore\Broking\Dto\MessageCollection;
+use Profesia\MessagingCore\Broking\Dto\GroupedMessagesCollection;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Profesia\MessagingCore\Persistence\DispatchedEventRepositoryInterface;
 use Profesia\MessagingCore\Test\Assets\Helper;
@@ -21,7 +21,7 @@ class AllMessagesPersisterTest extends MockeryTestCase
     public function testCanPublish(): void
     {
         $messages         = static::createMessages(3);
-        $collection       = MessageCollection::createFromMessagesAndChannel(
+        $collection       = GroupedMessagesCollection::createFromMessagesAndChannel(
                'channel',
             ...$messages
         );

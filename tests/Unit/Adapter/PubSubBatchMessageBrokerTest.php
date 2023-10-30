@@ -11,7 +11,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use Profesia\MessagingCore\Adapter\PubSubBatchMessageBroker;
-use Profesia\MessagingCore\Broking\Dto\MessageCollection;
+use Profesia\MessagingCore\Broking\Dto\GroupedMessagesCollection;
 use Profesia\MessagingCore\Test\Assets\Helper;
 
 class PubSubBatchMessageBrokerTest extends MockeryTestCase
@@ -32,7 +32,7 @@ class PubSubBatchMessageBrokerTest extends MockeryTestCase
         $channel  = 'channel';
         $messages = static::createMessages(3);
 
-        $messageCollection = MessageCollection::createFromMessagesAndChannel(
+        $messageCollection = GroupedMessagesCollection::createFromMessagesAndChannel(
                $channel,
             ...$messages
         );
@@ -81,7 +81,7 @@ class PubSubBatchMessageBrokerTest extends MockeryTestCase
         $channel  = 'channel';
         $messages = static::createMessages(3);
 
-        $messageCollection = MessageCollection::createFromMessagesAndChannel(
+        $messageCollection = GroupedMessagesCollection::createFromMessagesAndChannel(
                $channel,
             ...$messages
         );

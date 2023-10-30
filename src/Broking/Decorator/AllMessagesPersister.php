@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Profesia\MessagingCore\Broking\Decorator;
 
 use Profesia\MessagingCore\Broking\Dto\BrokingBatchResponse;
-use Profesia\MessagingCore\Broking\Dto\MessageCollection;
+use Profesia\MessagingCore\Broking\Dto\GroupedMessagesCollection;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Profesia\MessagingCore\Persistence\DispatchedEventRepositoryInterface;
 
@@ -23,11 +23,11 @@ class AllMessagesPersister implements MessageBrokerInterface
     }
 
     /**
-     * @param MessageCollection $collection
+     * @param GroupedMessagesCollection $collection
      *
      * @return BrokingBatchResponse
      */
-    public function publish(MessageCollection $collection): BrokingBatchResponse
+    public function publish(GroupedMessagesCollection $collection): BrokingBatchResponse
     {
         $response = $this->decoratedBroker->publish($collection);
         $this->repository->persistBatch(

@@ -11,7 +11,7 @@ use Profesia\MessagingCore\Broking\Decorator\FailedMessagesPersister;
 use Profesia\MessagingCore\Broking\Dto\BrokingBatchResponse;
 use Profesia\MessagingCore\Broking\Dto\BrokingStatus;
 use Profesia\MessagingCore\Broking\Dto\DispatchedMessage;
-use Profesia\MessagingCore\Broking\Dto\MessageCollection;
+use Profesia\MessagingCore\Broking\Dto\GroupedMessagesCollection;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Profesia\MessagingCore\Persistence\DispatchedEventRepositoryInterface;
 use Profesia\MessagingCore\Test\Assets\Helper;
@@ -23,7 +23,7 @@ class FailedMessagesPersisterTest extends MockeryTestCase
     public function testCanPublish(): void
     {
         $messages         = static::createMessages(5);
-        $collection       = MessageCollection::createFromMessagesAndChannel(
+        $collection       = GroupedMessagesCollection::createFromMessagesAndChannel(
                'channel',
             ...$messages
         );

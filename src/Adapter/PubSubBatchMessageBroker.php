@@ -6,7 +6,9 @@ namespace Profesia\MessagingCore\Adapter;
 
 use Google\Cloud\Core\Exception\GoogleException;
 use Google\Cloud\PubSub\PubSubClient;
-use Profesia\MessagingCore\Broking\Dto\MessageCollection;
+use Profesia\MessagingCore\Broking\Dto\BrokingStatus;
+use Profesia\MessagingCore\Broking\Dto\DispatchedMessage;
+use Profesia\MessagingCore\Broking\Dto\GroupedMessagesCollection;
 use Profesia\MessagingCore\Broking\Dto\BrokingBatchResponse;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 
@@ -16,29 +18,39 @@ final class PubSubBatchMessageBroker implements MessageBrokerInterface
 
     public function __construct(
         PubSubClient $pubSubClient
-    ) {
+    )
+    {
         $this->pubSubClient = $pubSubClient;
     }
 
-    public function publish(MessageCollection $collection): BrokingBatchResponse
+    public function publish(GroupedMessagesCollection $collection): BrokingBatchResponse
     {
-        $topic = $this->pubSubClient->topic($collection->getChannel());
-        try {
-            $topic->publishBatch(
-                $collection->getMessagesData()
-            );
+        $dispatchedMessages = [];
+        foreach ($collection->getTopics() as $topicName) {
+            $topic = $this->pubSubClient->topic($topicName);
 
-            return BrokingBatchResponse::createForMessagesWithBatchStatus(
-                   true,
-                   null,
-                ...$collection->getMessages()
-            );
-        } catch (GoogleException $e) {
-            return BrokingBatchResponse::createForMessagesWithBatchStatus(
-                   false,
-                   $e->getMessage(),
-                ...$collection->getMessages()
-            );
+            try {
+                $topic->publishBatch(
+                    $collection->getMessagesDataForTopic($topicName)
+                );
+
+
+                return BrokingBatchResponse::createForMessagesWithBatchStatus(
+                    true,
+                    null,
+                    ...$collection->getMessagesForTopic($topicName)
+                );
+            } catch (GoogleException $e) {
+                return BrokingBatchResponse::createForMessagesWithBatchStatus(
+                    false,
+                    $e->getMessage(),
+                    ...$collection->getMessagesForTopic($topicName)
+                );
+            }
         }
+
+        return BrokingBatchResponse::createForMessagesWithIndividualStatus(
+            ...$dispatchedMessages
+        );
     }
 }

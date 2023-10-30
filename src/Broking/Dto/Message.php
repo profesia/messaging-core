@@ -14,11 +14,11 @@ final class Message implements MessageInterface
     public const EVENT_RESOURCE       = 'resource';
     public const EVENT_PROVIDER       = 'provider';
     public const EVENT_OBJECT_ID      = 'objectId';
-    public const EVENT_TARGET         = 'target';
     public const EVENT_ATTRIBUTES     = 'attributes';
     public const MESSAGE_PAYLOAD      = 'payload';
     public const EVENT_DATA           = 'data';
     public const EVENT_SUBSCRIBE_NAME = 'subscribeName';
+    public const EVENT_ERROR_TOPIC    = 'errorTopic';
 
     private string            $resource;
     private string            $eventType;
@@ -26,10 +26,10 @@ final class Message implements MessageInterface
     private string            $objectId;
     private DateTimeImmutable $occurredOn;
     private string            $correlationId;
-    private string            $target;
     private string            $subscribeName;
+    private string            $publishingTopic;
+    private string            $errorTopic;
     private array             $payload;
-    private ?string           $topic;
 
     public function __construct(
         string $resource,
@@ -38,22 +38,22 @@ final class Message implements MessageInterface
         string $objectId,
         DateTimeImmutable $occurredOn,
         string $correlationId,
-        string $target,
         string $subscribeName,
-        array $payload,
-        ?string $topic = null
+        string $publishingTopic,
+        string $errorTopic,
+        array $payload
     )
     {
-        $this->resource      = $resource;
-        $this->eventType     = $eventType;
-        $this->provider      = $provider;
-        $this->objectId      = $objectId;
-        $this->occurredOn    = $occurredOn;
-        $this->correlationId = $correlationId;
-        $this->target        = $target;
-        $this->subscribeName = $subscribeName;
-        $this->payload       = $payload;
-        $this->topic         = $topic;
+        $this->resource        = $resource;
+        $this->eventType       = $eventType;
+        $this->provider        = $provider;
+        $this->objectId        = $objectId;
+        $this->occurredOn      = $occurredOn;
+        $this->correlationId   = $correlationId;
+        $this->subscribeName   = $subscribeName;
+        $this->publishingTopic = $publishingTopic;
+        $this->errorTopic      = $errorTopic;
+        $this->payload         = $payload;
     }
 
     public function toArray(): array
@@ -65,7 +65,7 @@ final class Message implements MessageInterface
             self::EVENT_OBJECT_ID      => $this->objectId,
             self::EVENT_OCCURRED_ON    => $this->occurredOn->format('Y-m-d H:i:s.u'),
             self::EVENT_CORRELATION_ID => $this->correlationId,
-            self::EVENT_TARGET         => $this->target,
+            self::EVENT_ERROR_TOPIC    => $this->errorTopic,
             self::EVENT_SUBSCRIBE_NAME => $this->subscribeName,
         ];
 
@@ -77,9 +77,9 @@ final class Message implements MessageInterface
         ];
     }
 
-    public function getTopic(): ?string
+    public function getPublishingTopic(): string
     {
-        return $this->topic;
+        return $this->publishingTopic;
     }
 }
 

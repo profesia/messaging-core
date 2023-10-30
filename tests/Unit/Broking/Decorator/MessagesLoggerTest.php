@@ -12,7 +12,7 @@ use Profesia\MessagingCore\Broking\Dto\BrokingBatchResponse;
 use Profesia\MessagingCore\Broking\Dto\BrokingStatus;
 use Profesia\MessagingCore\Broking\Dto\DispatchedMessage;
 use Profesia\MessagingCore\Broking\Dto\Message;
-use Profesia\MessagingCore\Broking\Dto\MessageCollection;
+use Profesia\MessagingCore\Broking\Dto\GroupedMessagesCollection;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Profesia\MessagingCore\Test\Assets\Helper;
 use Psr\Log\LoggerInterface;
@@ -24,7 +24,7 @@ class MessagesLoggerTest extends MockeryTestCase
     public function testCanHandleSuccessfulMessages(): void
     {
         $messages         = static::createMessages(3);
-        $collection       = MessageCollection::createFromMessagesAndChannel(
+        $collection       = GroupedMessagesCollection::createFromMessagesAndChannel(
                'channel',
             ...$messages
         );
@@ -76,7 +76,7 @@ class MessagesLoggerTest extends MockeryTestCase
     public function testCanHandleFailedMessages(): void
     {
         $messages         = static::createMessages(3);
-        $collection       = MessageCollection::createFromMessagesAndChannel(
+        $collection       = GroupedMessagesCollection::createFromMessagesAndChannel(
                'channel',
             ...$messages
         );
@@ -131,7 +131,7 @@ class MessagesLoggerTest extends MockeryTestCase
     public function testCanHandleMixedMessages(): void
     {
         $messages         = static::createMessages(5);
-        $collection       = MessageCollection::createFromMessagesAndChannel(
+        $collection       = GroupedMessagesCollection::createFromMessagesAndChannel(
                'channel',
             ...$messages
         );

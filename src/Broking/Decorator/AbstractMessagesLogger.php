@@ -7,7 +7,7 @@ namespace Profesia\MessagingCore\Broking\Decorator;
 use Profesia\MessagingCore\Broking\Dto\BrokingBatchResponse;
 use Profesia\MessagingCore\Broking\Dto\DispatchedMessage;
 use Profesia\MessagingCore\Broking\Dto\Message;
-use Profesia\MessagingCore\Broking\Dto\MessageCollection;
+use Profesia\MessagingCore\Broking\Dto\GroupedMessagesCollection;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -25,7 +25,7 @@ abstract class AbstractMessagesLogger implements MessageBrokerInterface
     }
 
 
-    public function publish(MessageCollection $collection): BrokingBatchResponse
+    public function publish(GroupedMessagesCollection $collection): BrokingBatchResponse
     {
         $response           = $this->decoratedBroker->publish($collection);
         $dispatchedMessages = $response->getDispatchedMessages();

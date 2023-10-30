@@ -4,20 +4,24 @@ declare(strict_types=1);
 
 namespace Profesia\MessagingCore\Broking\Dto;
 
-final class MessageCollection
+final class MessagesForTopic
 {
-    private string $channel;
-    private array $messages;
+    /** @var Message[] */
+    private array  $messages;
+    private string $topic;
 
-    private function __construct(
-        string $channel,
-        array $messages
-    ) {
-        $this->channel  = $channel;
+    /**
+     * @param string $topic
+     * @param Message[] $messages
+     */
+    public function __construct(string $topic, array $messages)
+    {
+        $this->topic    = $topic;
         $this->messages = $messages;
     }
 
-    public static function createFromMessagesAndChannel(string $channel, Message...$messages): MessageCollection
+
+    public static function createFromTopicAndMessages(string $channel, Message...$messages): MessagesForTopic
     {
         return new self(
             $channel,
@@ -35,18 +39,13 @@ final class MessageCollection
         return $data;
     }
 
-    /**
-     * @return Message[]
-     */
     public function getMessages(): array
     {
         return $this->messages;
     }
 
-    public function getChannel(): string
+    public function getTopic(): string
     {
-        return $this->channel;
+        return $this->topic;
     }
-
-
 }

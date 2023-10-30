@@ -11,7 +11,7 @@ use Profesia\MessagingCore\Broking\Decorator\MessagesLogger;
 use Profesia\MessagingCore\Broking\Decorator\TargetFilteringMessagesLogger;
 use Profesia\MessagingCore\Broking\Dto\BrokingBatchResponse;
 use Profesia\MessagingCore\Broking\Dto\Message;
-use Profesia\MessagingCore\Broking\Dto\MessageCollection;
+use Profesia\MessagingCore\Broking\Dto\GroupedMessagesCollection;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Profesia\MessagingCore\Test\Assets\Helper;
 use Psr\Log\LoggerInterface;
@@ -51,7 +51,7 @@ class TargetFilteringMessagesLoggerTest extends MockeryTestCase
      */
     public function testCanFilterMessages(array $allMessages, string $targetSubstring): void
     {
-        $collection       = MessageCollection::createFromMessagesAndChannel(
+        $collection       = GroupedMessagesCollection::createFromMessagesAndChannel(
             'channel',
             ...$allMessages
         );
@@ -118,7 +118,7 @@ class TargetFilteringMessagesLoggerTest extends MockeryTestCase
     public function testCanHandleFailedMessages(): void
     {
         $messages         = static::createMessages(3);
-        $collection       = MessageCollection::createFromMessagesAndChannel(
+        $collection       = GroupedMessagesCollection::createFromMessagesAndChannel(
             'channel',
             ...$messages
         );
