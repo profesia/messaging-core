@@ -21,11 +21,11 @@ final class MessagesForTopic
     }
 
 
-    public static function createFromTopicAndMessages(string $channel, Message...$messages): MessagesForTopic
+    public static function createFromTopicAndMessages(string $topic, Message...$messages): MessagesForTopic
     {
         return new self(
-            $channel,
-            $messages
+            $topic,
+            ...$messages
         );
     }
 
