@@ -19,6 +19,21 @@ final class PubSubReceivedMessage implements ReceivedMessageInterface
         $this->message = $message;
     }
 
+    public static function createFromRaw(array $attributes, array $data): self
+    {
+        $eventTypeKey = Message::EVENT_TYPE;
+        if (array_key_exists($eventTypeKey, $attributes) === false) {
+            throw new ReceivedMessageBadStructureException(sprintf('Missing offset: [%s] in attributes', $eventTypeKey));
+        }
+
+        return new self([
+            self::MESSAGE_KEY => [
+                Message::EVENT_ATTRIBUTES => $attributes,
+                Message::EVENT_DATA       => $data,
+            ],
+        ]);
+    }
+
     public static function createFromJsonString(string $json): self
     {
         $messageKey = self::MESSAGE_KEY;

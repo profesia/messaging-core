@@ -29,7 +29,7 @@ final class Message implements MessageInterface
     private string            $target;
     private string            $subscribeName;
     private array             $payload;
-    private bool              $isPublic;
+    private ?string           $topic;
 
     public function __construct(
         string $resource,
@@ -41,7 +41,7 @@ final class Message implements MessageInterface
         string $target,
         string $subscribeName,
         array $payload,
-        bool $isPublic = true
+        ?string $topic = null
     )
     {
         $this->resource      = $resource;
@@ -53,7 +53,7 @@ final class Message implements MessageInterface
         $this->target        = $target;
         $this->subscribeName = $subscribeName;
         $this->payload       = $payload;
-        $this->isPublic      = $isPublic;
+        $this->topic         = $topic;
     }
 
     public function toArray(): array
@@ -77,9 +77,9 @@ final class Message implements MessageInterface
         ];
     }
 
-    public function isPublic(): bool
+    public function getTopic(): ?string
     {
-        return $this->isPublic;
+        return $this->topic;
     }
 }
 
