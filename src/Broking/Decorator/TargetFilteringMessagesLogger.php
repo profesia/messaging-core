@@ -9,6 +9,9 @@ use Profesia\MessagingCore\Broking\Dto\Message;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @deprecated
+ */
 final class TargetFilteringMessagesLogger extends AbstractMessagesLogger
 {
     private string $targetSubstring;
