@@ -23,8 +23,7 @@ class FailedMessagesPersisterTest extends MockeryTestCase
     public function testCanPublish(): void
     {
         $messages         = static::createMessages(5);
-        $collection       = GroupedMessagesCollection::createFromMessagesAndChannel(
-               'channel',
+        $collection       = GroupedMessagesCollection::createFromMessages(
             ...$messages
         );
 

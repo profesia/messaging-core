@@ -22,7 +22,7 @@ final class GroupedMessagesCollection
     {
         $groupedMessages = [];
         foreach ($messages as $message) {
-            $topic = $message->getPublishingTopic();
+            $topic = $message->getTopic();
             if (array_key_exists($topic, $groupedMessages) === false) {
                 $groupedMessages[$topic] = [];
             }

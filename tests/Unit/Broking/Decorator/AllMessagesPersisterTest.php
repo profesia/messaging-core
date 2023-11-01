@@ -21,8 +21,7 @@ class AllMessagesPersisterTest extends MockeryTestCase
     public function testCanPublish(): void
     {
         $messages         = static::createMessages(3);
-        $collection       = GroupedMessagesCollection::createFromMessagesAndChannel(
-               'channel',
+        $collection       = GroupedMessagesCollection::createFromMessages(
             ...$messages
         );
         $expectedResponse = BrokingBatchResponse::createForMessagesWithBatchStatus(

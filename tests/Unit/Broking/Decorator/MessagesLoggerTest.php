@@ -24,8 +24,7 @@ class MessagesLoggerTest extends MockeryTestCase
     public function testCanHandleSuccessfulMessages(): void
     {
         $messages         = static::createMessages(3);
-        $collection       = GroupedMessagesCollection::createFromMessagesAndChannel(
-               'channel',
+        $collection       = GroupedMessagesCollection::createFromMessages(
             ...$messages
         );
         $expectedResponse = BrokingBatchResponse::createForMessagesWithBatchStatus(
@@ -76,8 +75,7 @@ class MessagesLoggerTest extends MockeryTestCase
     public function testCanHandleFailedMessages(): void
     {
         $messages         = static::createMessages(3);
-        $collection       = GroupedMessagesCollection::createFromMessagesAndChannel(
-               'channel',
+        $collection       = GroupedMessagesCollection::createFromMessages(
             ...$messages
         );
 
@@ -131,8 +129,7 @@ class MessagesLoggerTest extends MockeryTestCase
     public function testCanHandleMixedMessages(): void
     {
         $messages         = static::createMessages(5);
-        $collection       = GroupedMessagesCollection::createFromMessagesAndChannel(
-               'channel',
+        $collection       = GroupedMessagesCollection::createFromMessages(
             ...$messages
         );
 

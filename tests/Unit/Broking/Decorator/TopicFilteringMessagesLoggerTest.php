@@ -7,8 +7,7 @@ namespace Profesia\MessagingCore\Test\Unit\Broking\Decorator;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
-use Profesia\MessagingCore\Broking\Decorator\MessagesLogger;
-use Profesia\MessagingCore\Broking\Decorator\TargetFilteringMessagesLogger;
+use Profesia\MessagingCore\Broking\Decorator\TopicFilteringMessagesLogger;
 use Profesia\MessagingCore\Broking\Dto\BrokingBatchResponse;
 use Profesia\MessagingCore\Broking\Dto\Message;
 use Profesia\MessagingCore\Broking\Dto\GroupedMessagesCollection;
@@ -16,7 +15,7 @@ use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Profesia\MessagingCore\Test\Assets\Helper;
 use Psr\Log\LoggerInterface;
 
-class TargetFilteringMessagesLoggerTest extends MockeryTestCase
+class TopicFilteringMessagesLoggerTest extends MockeryTestCase
 {
     use Helper;
 
@@ -25,11 +24,11 @@ class TargetFilteringMessagesLoggerTest extends MockeryTestCase
         return [
             [
                 static::createMessages(11),
-                'target1',
+                'topic1',
             ],
             [
                 static::createMessages(11),
-                'TARGET1',
+                'TOPIC2',
             ],
             [
                 static::createMessages(5),
@@ -37,7 +36,7 @@ class TargetFilteringMessagesLoggerTest extends MockeryTestCase
             ],
             [
                 static::createMessages(11),
-                'target1'
+                'topic1'
             ],
         ];
     }
@@ -51,8 +50,7 @@ class TargetFilteringMessagesLoggerTest extends MockeryTestCase
      */
     public function testCanFilterMessages(array $allMessages, string $targetSubstring): void
     {
-        $collection       = GroupedMessagesCollection::createFromMessagesAndChannel(
-            'channel',
+        $collection       = GroupedMessagesCollection::createFromMessages(
             ...$allMessages
         );
         $expectedResponse = BrokingBatchResponse::createForMessagesWithBatchStatus(
@@ -76,13 +74,9 @@ class TargetFilteringMessagesLoggerTest extends MockeryTestCase
 
         $projectName      = 'projectName';
         $filteredMessages = array_filter($allMessages, function (Message $message) use ($targetSubstring) {
-            $messageArray = $message->toArray();
-
-            $target = $messageArray[Message::EVENT_ATTRIBUTES][Message::EVENT_TARGET];
-
             return (
                 str_contains(
-                    strtolower($target),
+                    strtolower($message->getTopic()),
                     strtolower($targetSubstring)
                 ) === false
             );
@@ -92,18 +86,18 @@ class TargetFilteringMessagesLoggerTest extends MockeryTestCase
         $logger = Mockery::mock(LoggerInterface::class);
         /** @var Message $message */
         foreach ($filteredMessages as $message) {
-                $logger
-                    ->shouldReceive('info')
-                    ->once()
-                    ->withArgs(
-                        [
-                            "Message from {$projectName} was published",
-                            (array)json_decode($message->toArray()[Message::EVENT_DATA], true),
-                        ]
-                    );
+            $logger
+                ->shouldReceive('info')
+                ->once()
+                ->withArgs(
+                    [
+                        "Message from {$projectName} was published",
+                        (array)json_decode($message->toArray()[Message::EVENT_DATA], true),
+                    ]
+                );
         }
 
-        $decorator = new TargetFilteringMessagesLogger(
+        $decorator = new TopicFilteringMessagesLogger(
             $broker,
             $logger,
             $projectName,
@@ -118,8 +112,7 @@ class TargetFilteringMessagesLoggerTest extends MockeryTestCase
     public function testCanHandleFailedMessages(): void
     {
         $messages         = static::createMessages(3);
-        $collection       = GroupedMessagesCollection::createFromMessagesAndChannel(
-            'channel',
+        $collection       = GroupedMessagesCollection::createFromMessages(
             ...$messages
         );
 
@@ -160,11 +153,11 @@ class TargetFilteringMessagesLoggerTest extends MockeryTestCase
                 );
         }
 
-        $decorator = new TargetFilteringMessagesLogger(
+        $decorator = new TopicFilteringMessagesLogger(
             $broker,
             $logger,
             $projectName,
-            'target1'
+            'topic1'
         );
 
         $actualResponse = $decorator->publish($collection);

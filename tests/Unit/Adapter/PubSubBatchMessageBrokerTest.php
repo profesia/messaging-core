@@ -29,11 +29,12 @@ class PubSubBatchMessageBrokerTest extends MockeryTestCase
             $pubSubClient
         );
 
-        $channel  = 'channel';
-        $messages = static::createMessages(3);
+        $topicName = 'topicName';
+        $messages  = static::createMessages(3, [
+            'topic' => $topicName
+        ]);
 
-        $messageCollection = GroupedMessagesCollection::createFromMessagesAndChannel(
-               $channel,
+        $messageCollection = GroupedMessagesCollection::createFromMessages(
             ...$messages
         );
 
@@ -42,7 +43,7 @@ class PubSubBatchMessageBrokerTest extends MockeryTestCase
             ->once()
             ->withArgs(
                 [
-                    $channel,
+                    $topicName,
                 ]
             )
             ->andReturn(
@@ -54,7 +55,7 @@ class PubSubBatchMessageBrokerTest extends MockeryTestCase
             ->once()
             ->withArgs(
                 [
-                    $messageCollection->getMessagesData(),
+                    $messageCollection->getMessagesDataForTopic($topicName),
                 ]
             );
 
@@ -78,11 +79,12 @@ class PubSubBatchMessageBrokerTest extends MockeryTestCase
             $pubSubClient
         );
 
-        $channel  = 'channel';
-        $messages = static::createMessages(3);
+        $topicName = 'topicName';
+        $messages  = static::createMessages(3, [
+            'topic' => $topicName
+        ]);
 
-        $messageCollection = GroupedMessagesCollection::createFromMessagesAndChannel(
-               $channel,
+        $messageCollection = GroupedMessagesCollection::createFromMessages(
             ...$messages
         );
 
@@ -91,7 +93,7 @@ class PubSubBatchMessageBrokerTest extends MockeryTestCase
             ->once()
             ->withArgs(
                 [
-                    $channel,
+                    $topicName,
                 ]
             )
             ->andReturn(
@@ -103,7 +105,7 @@ class PubSubBatchMessageBrokerTest extends MockeryTestCase
             ->once()
             ->withArgs(
                 [
-                    $messageCollection->getMessagesData(),
+                    $messageCollection->getMessagesDataForTopic($topicName),
                 ]
             )
             ->andThrow(new GoogleException('Testing exception'));

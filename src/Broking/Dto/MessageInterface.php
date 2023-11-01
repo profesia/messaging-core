@@ -8,5 +8,5 @@ interface MessageInterface
 {
     public function toArray(): array;
 
-    public function getPublishingTopic(): string;
+    public function getTopic(): string;
 }

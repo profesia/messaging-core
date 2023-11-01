@@ -24,16 +24,17 @@ class PubSubMessageBrokerTest extends MockeryTestCase
         $pubSubClient = Mockery::mock(PubSubClient::class);
 
         /** @var Topic|MockInterface $topic */
-        $topic = Mockery::mock(Topic::class);
+        $topic  = Mockery::mock(Topic::class);
         $broker = new PubSubMessageBroker(
             $pubSubClient
         );
 
-        $channel  = 'channel';
-        $messages = static::createMessages(3);
+        $topicName = 'topicName';
+        $messages  = static::createMessages(3, [
+            'topic' => $topicName
+        ]);
 
-        $messageCollection = GroupedMessagesCollection::createFromMessagesAndChannel(
-               $channel,
+        $messageCollection = GroupedMessagesCollection::createFromMessages(
             ...$messages
         );
 
@@ -42,7 +43,7 @@ class PubSubMessageBrokerTest extends MockeryTestCase
             ->once()
             ->withArgs(
                 [
-                    $channel,
+                    $topicName,
                 ]
             )
             ->andReturn(
@@ -80,11 +81,12 @@ class PubSubMessageBrokerTest extends MockeryTestCase
             $pubSubClient
         );
 
-        $channel  = 'channel';
-        $messages = static::createMessages(3);
+        $topicName = 'topic';
+        $messages  = static::createMessages(3, [
+            'topic' => $topicName
+        ]);
 
-        $messageCollection = GroupedMessagesCollection::createFromMessagesAndChannel(
-               $channel,
+        $messageCollection = GroupedMessagesCollection::createFromMessages(
             ...$messages
         );
 
@@ -93,7 +95,7 @@ class PubSubMessageBrokerTest extends MockeryTestCase
             ->once()
             ->withArgs(
                 [
-                    $channel,
+                    $topicName,
                 ]
             )
             ->andReturn(

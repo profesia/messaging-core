@@ -23,10 +23,10 @@ class MessageTest extends TestCase
                     'correlationId' => 'correlationId1',
                     'target'        => 'target1',
                     'subscribeName' => 'subscribeName1',
+                    'topic'     => 'topicName1',
                     'payload'       => [
                         1,
                     ],
-                    'topicName'     => 'topicName1',
                 ],
             ],
             [
@@ -39,10 +39,10 @@ class MessageTest extends TestCase
                     'correlationId' => 'correlationId2',
                     'target'        => 'target2',
                     'subscribeName' => 'subscribeName2',
+                    'topic'     => 'topicName2',
                     'payload'       => [
                         2,
                     ],
-                    'topicName'     => 'topicName2',
                 ],
             ],
         ];
@@ -64,13 +64,12 @@ class MessageTest extends TestCase
             $data['objectId'],
             $data['occurredOn'],
             $data['correlationId'],
-            $data['target'],
             $data['subscribeName'],
+            $data['topic'],
             $data['payload'],
-            $data['topicName']
         );
 
-        $this->assertEquals($data['topicName'], $message->getTopic());
+        $this->assertEquals($data['topic'], $message->getTopic());
 
         $attributes = [
             Message::EVENT_RESOURCE       => $data['resource'],
@@ -79,7 +78,6 @@ class MessageTest extends TestCase
             Message::EVENT_OBJECT_ID      => $data['objectId'],
             Message::EVENT_OCCURRED_ON    => $data['occurredOn']->format('Y-m-d H:i:s.u'),
             Message::EVENT_CORRELATION_ID => $data['correlationId'],
-            Message::EVENT_TARGET         => $data['target'],
             Message::EVENT_SUBSCRIBE_NAME => $data['subscribeName'],
         ];
 
