@@ -14,11 +14,17 @@ final class BrokingBatchResponse
         $this->dispatchedMessages = $dispatchedMessages;
     }
 
+    public static function createEmpty(): self
+    {
+        return new self();
+    }
+
     public static function createForMessagesWithBatchStatus(bool $isSuccessful, ?string $reason = null, Message...$messages): self
     {
         $dispatchedMessages = [];
-        foreach ($messages as $key => $message) {
-            $dispatchedMessages[$key] = new DispatchedMessage(
+        $index              = 0;
+        foreach ($messages as $message) {
+            $dispatchedMessages[$index++] = new DispatchedMessage(
                 $message,
                 new BrokingStatus($isSuccessful, $reason)
             );
@@ -42,5 +48,21 @@ final class BrokingBatchResponse
     public function getDispatchedMessages(): array
     {
         return $this->dispatchedMessages;
+    }
+
+    public function appendMessagesWithBatchStatus(bool $isSuccessful, ?string $reason = null, Message...$messages): self
+    {
+        $dispatchedMessages = [];
+        $startIndex         = sizeof($this->dispatchedMessages) - 1;
+        foreach ($messages as $message) {
+            $dispatchedMessages[$startIndex++] = new DispatchedMessage(
+                $message,
+                new BrokingStatus($isSuccessful, $reason)
+            );
+        }
+
+        return new self(
+            ...array_merge($this->dispatchedMessages, $dispatchedMessages)
+        );
     }
 }

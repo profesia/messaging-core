@@ -146,4 +146,184 @@ class PubSubMessageBrokerTest extends MockeryTestCase
             $index++;
         }
     }
+
+    public function testCanHandleMultipleTopics(): void
+    {
+        /** @var PubSubClient|MockInterface $pubSubClient */
+        $pubSubClient = Mockery::mock(PubSubClient::class);
+
+        /** @var Topic|MockInterface $topic1 */
+        $topic1 = Mockery::mock(Topic::class);
+
+        /** @var Topic|MockInterface $topic2 */
+        $topic2 = Mockery::mock(Topic::class);
+
+        /** @var Topic|MockInterface $topic3 */
+        $topic3 = Mockery::mock(Topic::class);
+
+        $broker = new PubSubMessageBroker(
+            $pubSubClient
+        );
+
+        $messages1 = self::createMessages(3, ['topic' => 'topic1']);
+        $messages2 = self::createMessages(6, ['topic' => 'topic2']);
+        $messages3 = self::createMessages(3, ['topic' => 'topic3']);
+
+        $allMessages = array_merge($messages1, $messages2, $messages3);
+
+        $messageCollection = GroupedMessagesCollection::createFromMessages(
+            ...$allMessages
+        );
+
+        $topicMap = [
+            'topic1' => $topic1,
+            'topic2' => $topic2,
+            'topic3' => $topic3,
+        ];
+        foreach ($messageCollection->getTopics() as $topicName) {
+            $pubSubClient
+                ->shouldReceive('topic')
+                ->once()
+                ->withArgs(
+                    [
+                        $topicName,
+                    ]
+                )
+                ->andReturn(
+                    $topicMap[$topicName]
+                );
+        }
+
+        foreach ($messageCollection->getMessagesForTopic('topic1') as $message) {
+            $topic1
+                ->shouldReceive('publish')
+                ->once()
+                ->withArgs(
+                    [
+                        $message->toArray(),
+                    ]
+                );
+        }
+
+        foreach ($messageCollection->getMessagesForTopic('topic2') as $message) {
+            $topic2
+                ->shouldReceive('publish')
+                ->once()
+                ->withArgs(
+                    [
+                        $message->toArray(),
+                    ]
+                );
+        }
+
+        foreach ($messageCollection->getMessagesForTopic('topic3') as $message) {
+            $topic3
+                ->shouldReceive('publish')
+                ->once()
+                ->withArgs(
+                    [
+                        $message->toArray(),
+                    ]
+                );
+        }
+
+        $response = $broker->publish($messageCollection);
+        foreach ($response->getDispatchedMessages() as $key => $dispatchedMessage) {
+            $this->assertTrue($dispatchedMessage->wasDispatchedSuccessfully());
+            $this->assertEquals($dispatchedMessage->getMessage(), $allMessages[$key]);
+        }
+    }
+
+    public function testCanHandleExceptionInMultipleTopics(): void
+    {
+        /** @var PubSubClient|MockInterface $pubSubClient */
+        $pubSubClient = Mockery::mock(PubSubClient::class);
+
+        /** @var Topic|MockInterface $topic1 */
+        $topic1 = Mockery::mock(Topic::class);
+
+        /** @var Topic|MockInterface $topic2 */
+        $topic2 = Mockery::mock(Topic::class);
+
+        /** @var Topic|MockInterface $topic3 */
+        $topic3 = Mockery::mock(Topic::class);
+
+        $broker = new PubSubMessageBroker(
+            $pubSubClient
+        );
+
+        $messages1 = self::createMessages(3, ['topic' => 'topic1']);
+        $messages2 = self::createMessages(6, ['topic' => 'topic2']);
+        $messages3 = self::createMessages(3, ['topic' => 'topic3']);
+
+        $allMessages = array_merge($messages1, $messages2, $messages3);
+
+        $messageCollection = GroupedMessagesCollection::createFromMessages(
+            ...$allMessages
+        );
+
+        $topicMap = [
+            'topic1' => $topic1,
+            'topic2' => $topic2,
+            'topic3' => $topic3,
+        ];
+        foreach ($messageCollection->getTopics() as $topicName) {
+            $pubSubClient
+                ->shouldReceive('topic')
+                ->once()
+                ->withArgs(
+                    [
+                        $topicName,
+                    ]
+                )
+                ->andReturn(
+                    $topicMap[$topicName]
+                );
+        }
+
+        foreach ($messageCollection->getMessagesForTopic('topic1') as $message) {
+            $topic1
+                ->shouldReceive('publish')
+                ->once()
+                ->withArgs(
+                    [
+                        $message->toArray(),
+                    ]
+                );
+        }
+
+        foreach ($messageCollection->getMessagesForTopic('topic2') as $message) {
+            $topic2
+                ->shouldReceive('publish')
+                ->once()
+                ->withArgs(
+                    [
+                        $message->toArray(),
+                    ]
+                )->andThrow(
+                    new GoogleException('Testing exception')
+                );
+        }
+
+        foreach ($messageCollection->getMessagesForTopic('topic3') as $message) {
+            $topic3
+                ->shouldReceive('publish')
+                ->once()
+                ->withArgs(
+                    [
+                        $message->toArray(),
+                    ]
+                );
+        }
+
+        $response = $broker->publish($messageCollection);
+        foreach ($response->getDispatchedMessages() as $key => $dispatchedMessage) {
+            if ($dispatchedMessage->getMessage()->getTopic() !== 'topic2') {
+                $this->assertTrue($dispatchedMessage->wasDispatchedSuccessfully());
+            } else {
+                $this->assertFalse($dispatchedMessage->wasDispatchedSuccessfully());
+            }
+            $this->assertEquals($dispatchedMessage->getMessage(), $allMessages[$key]);
+        }
+    }
 }

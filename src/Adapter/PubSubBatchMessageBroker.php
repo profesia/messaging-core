@@ -6,8 +6,6 @@ namespace Profesia\MessagingCore\Adapter;
 
 use Google\Cloud\Core\Exception\GoogleException;
 use Google\Cloud\PubSub\PubSubClient;
-use Profesia\MessagingCore\Broking\Dto\BrokingStatus;
-use Profesia\MessagingCore\Broking\Dto\DispatchedMessage;
 use Profesia\MessagingCore\Broking\Dto\GroupedMessagesCollection;
 use Profesia\MessagingCore\Broking\Dto\BrokingBatchResponse;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
@@ -25,7 +23,7 @@ final class PubSubBatchMessageBroker implements MessageBrokerInterface
 
     public function publish(GroupedMessagesCollection $collection): BrokingBatchResponse
     {
-        $dispatchedMessages = [];
+        $brokingBatchResponse = BrokingBatchResponse::createEmpty();
         foreach ($collection->getTopics() as $topicName) {
             $topic = $this->pubSubClient->topic($topicName);
 
@@ -34,14 +32,13 @@ final class PubSubBatchMessageBroker implements MessageBrokerInterface
                     $collection->getMessagesDataForTopic($topicName)
                 );
 
-
-                return BrokingBatchResponse::createForMessagesWithBatchStatus(
+                $brokingBatchResponse = $brokingBatchResponse->appendMessagesWithBatchStatus(
                     true,
                     null,
                     ...$collection->getMessagesForTopic($topicName)
                 );
             } catch (GoogleException $e) {
-                return BrokingBatchResponse::createForMessagesWithBatchStatus(
+                $brokingBatchResponse = $brokingBatchResponse->appendMessagesWithBatchStatus(
                     false,
                     $e->getMessage(),
                     ...$collection->getMessagesForTopic($topicName)
@@ -49,8 +46,6 @@ final class PubSubBatchMessageBroker implements MessageBrokerInterface
             }
         }
 
-        return BrokingBatchResponse::createForMessagesWithIndividualStatus(
-            ...$dispatchedMessages
-        );
+        return $brokingBatchResponse;
     }
 }
