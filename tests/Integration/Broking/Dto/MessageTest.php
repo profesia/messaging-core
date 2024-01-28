@@ -7,13 +7,15 @@ namespace Profesia\MessagingCore\Test\Integration\Broking\Dto;
 use PHPUnit\Framework\TestCase;
 use DateTimeImmutable;
 use Profesia\MessagingCore\Broking\Dto\Message;
+use Profesia\MessagingCore\Broking\Exception\MessagePayloadDecodingException;
+use Profesia\MessagingCore\Exception\AbstractRuntimeException;
 
 class MessageTest extends TestCase
 {
     public function provideDataForDataGettingTest(): array
     {
         return [
-            [
+            'event1' => [
                 [
                     'resource'      => 'resource1',
                     'eventType'     => 'eventType1',
@@ -21,15 +23,14 @@ class MessageTest extends TestCase
                     'objectId'      => 'objectId1',
                     'occurredOn'    => new DateTimeImmutable(),
                     'correlationId' => 'correlationId1',
-                    'target'        => 'target1',
                     'subscribeName' => 'subscribeName1',
-                    'topic'     => 'topicName1',
+                    'topic'         => 'topicName1',
                     'payload'       => [
                         1,
                     ],
                 ],
             ],
-            [
+            'event2' => [
                 [
                     'resource'      => 'resource2',
                     'eventType'     => 'eventType2',
@@ -37,14 +38,29 @@ class MessageTest extends TestCase
                     'objectId'      => 'objectId2',
                     'occurredOn'    => new DateTimeImmutable(),
                     'correlationId' => 'correlationId2',
-                    'target'        => 'target2',
                     'subscribeName' => 'subscribeName2',
-                    'topic'     => 'topicName2',
+                    'topic'         => 'topicName2',
                     'payload'       => [
                         2,
                     ],
                 ],
             ],
+            'event-with-encode-error' => [
+                [
+                    'resource'      => 'resource3',
+                    'eventType'     => 'eventType3',
+                    'provider'      => 'provider3',
+                    'objectId'      => 'objectId3',
+                    'occurredOn'    => new DateTimeImmutable(),
+                    'correlationId' => 'correlationId3',
+                    'subscribeName' => 'subscribeName3',
+                    'topic'         => 'topicName3',
+                    'payload'       => [
+                        'test-field' => pack('S4',1974,106,28225,32725),
+                    ],
+                ],
+                new MessagePayloadDecodingException('Failed to encode message payload. Cause: [{Malformed UTF-8 characters, possibly incorrectly encoded}]')
+            ]
         ];
     }
 
@@ -55,7 +71,7 @@ class MessageTest extends TestCase
      *
      * @dataProvider provideDataForDataGettingTest
      */
-    public function testCanGetData(array $data): void
+    public function testCanGetData(array $data, ?AbstractRuntimeException $exception = null): void
     {
         $message = new Message(
             $data['resource'],
@@ -81,13 +97,21 @@ class MessageTest extends TestCase
             Message::EVENT_SUBSCRIBE_NAME => $data['subscribeName'],
         ];
 
-        $messageToCompare = [
-            Message::EVENT_ATTRIBUTES => $attributes,
-            Message::EVENT_DATA       => json_encode(
-                array_merge($attributes, [Message::MESSAGE_PAYLOAD => $data['payload']])
-            ),
-        ];
+        if ($exception === null) {
+            $messageToCompare = [
+                Message::EVENT_ATTRIBUTES => $attributes,
+                Message::EVENT_DATA       => json_encode(
+                    array_merge($attributes, [Message::MESSAGE_PAYLOAD => $data['payload']])
+                ),
+            ];
 
-        $this->assertEquals($messageToCompare, $message->toArray());
+            $this->assertEquals($messageToCompare, $message->toArray());
+        } else {
+            $this->expectExceptionObject(
+                new MessagePayloadDecodingException('Failed to encode message payload. Cause: [{Malformed UTF-8 characters, possibly incorrectly encoded}]')
+            );
+            $message->toArray();
+        }
+        $this->assertEquals($data['topic'], $message->getTopic());
     }
 }

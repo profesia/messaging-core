@@ -31,11 +31,10 @@ abstract class AbstractMessagesLogger implements MessageBrokerInterface
         $dispatchedMessages = $response->getDispatchedMessages();
 
         foreach ($dispatchedMessages as $dispatchedMessage) {
-            $messageData = $dispatchedMessage->getMessage()->toArray();
             if ($dispatchedMessage->wasDispatchedSuccessfully() === true && $this->shouldBeSentMessageLogged($dispatchedMessage)) {
                 $this->logger->info(
                     "Message from {$this->projectName} was published",
-                    (array)json_decode($messageData[Message::EVENT_DATA], true)
+                    $dispatchedMessage->getEventData()
                 );
 
                 continue;
@@ -45,7 +44,7 @@ abstract class AbstractMessagesLogger implements MessageBrokerInterface
                 continue;
             }
 
-            $messageAttributes = $messageData[Message::EVENT_ATTRIBUTES];
+            $messageAttributes = $dispatchedMessage->getEventAttributes();
             $this->logger->error(
                 "Error while publishing messages in {$this->projectName}. Message: Resource - [{$messageAttributes[Message::EVENT_TYPE]}], ID - [{$messageAttributes[Message::EVENT_OBJECT_ID]}]. Cause: [{$dispatchedMessage->getDispatchReason()}]"
             );

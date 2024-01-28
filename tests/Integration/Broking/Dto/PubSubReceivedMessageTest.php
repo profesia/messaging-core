@@ -7,6 +7,7 @@ use Profesia\MessagingCore\Broking\Dto\Message;
 use Profesia\MessagingCore\Broking\Dto\PubSubReceivedMessage;
 use Profesia\MessagingCore\Broking\Exception\ReceivedMessageDecodingFailedException;
 use Profesia\MessagingCore\Broking\Exception\ReceivedMessageBadStructureException;
+use DateTimeImmutable;
 
 class PubSubReceivedMessageTest extends TestCase
 {
@@ -78,6 +79,30 @@ class PubSubReceivedMessageTest extends TestCase
     {
         $this->expectExceptionObject(new ReceivedMessageBadStructureException("Missing offset: [eventType] in attributes"));
         PubSubReceivedMessage::createFromRaw([], []);
+    }
+
+    public function testCanCreateFromRawInput(): void
+    {
+        $attributes =             [
+            Message::EVENT_RESOURCE       => 'resource1',
+            Message::EVENT_TYPE           => 'eventType1',
+            Message::EVENT_PROVIDER       => 'provider1',
+            Message::EVENT_OBJECT_ID      => 'objectId1',
+            Message::EVENT_OCCURRED_ON    => new DateTimeImmutable(),
+            Message::EVENT_CORRELATION_ID => 'correlationId1',
+            Message::EVENT_SUBSCRIBE_NAME => 'subscribeName1',
+        ];
+        $payload = 'test';
+        $message = PubSubReceivedMessage::createFromRaw(
+            $attributes,
+            [
+                Message::MESSAGE_PAYLOAD => $payload
+            ]
+        );
+
+        $this->assertEquals($attributes[Message::EVENT_TYPE], $message->getEventType());
+        $this->assertEquals($attributes[Message::EVENT_SUBSCRIBE_NAME], $message->getSubscribeName());
+        $this->assertEquals([Message::EVENT_ATTRIBUTES => $attributes, Message::EVENT_DATA => [Message::MESSAGE_PAYLOAD => $payload]], $message->getDecodedMessage());
     }
 
     public function testCanGetValues(): void

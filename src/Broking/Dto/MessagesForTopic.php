@@ -29,16 +29,6 @@ final class MessagesForTopic
         );
     }
 
-    public function getMessagesData(): array
-    {
-        $data = [];
-        foreach ($this->messages as $key => $message) {
-            $data[$key] = $message->toArray();
-        }
-
-        return $data;
-    }
-
     public function getMessages(): array
     {
         return $this->messages;

@@ -10,7 +10,7 @@ use Profesia\MessagingCore\Broking\Exception\ReceivedMessageDecodingFailedExcept
 
 final class PubSubReceivedMessage implements ReceivedMessageInterface
 {
-    private const MESSAGE_KEY = 'message';
+    public const MESSAGE_KEY = 'message';
 
     private array $message;
 

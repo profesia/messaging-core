@@ -22,22 +22,22 @@ class TopicFilteringMessagesLoggerTest extends MockeryTestCase
     public function provideDataFroFiltering(): array
     {
         return [
-            [
+            'topic-name-lower-case' => [
                 static::createMessages(11),
                 'topic1',
             ],
-            [
+            'topic-name-upper-case' => [
                 static::createMessages(11),
                 'TOPIC2',
             ],
-            [
+            'topic-name-not-matching' => [
                 static::createMessages(5),
                 'not-matching',
             ],
-            [
+            /*[
                 static::createMessages(11),
                 'topic1'
-            ],
+            ],*/
         ];
     }
 
@@ -141,8 +141,7 @@ class TopicFilteringMessagesLoggerTest extends MockeryTestCase
         /** @var MockInterface|LoggerInterface $logger */
         $logger = Mockery::mock(LoggerInterface::class);
         foreach ($expectedResponse->getDispatchedMessages() as $dispatchedMessage) {
-            $messageData       = $dispatchedMessage->getMessage()->toArray();
-            $messageAttributes = $messageData[Message::EVENT_ATTRIBUTES];
+            $messageAttributes = $dispatchedMessage->getEventAttributes();
             $logger
                 ->shouldReceive('error')
                 ->once()

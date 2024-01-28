@@ -12,6 +12,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use Profesia\MessagingCore\Adapter\PubSubMessageBroker;
 use Profesia\MessagingCore\Broking\Dto\GroupedMessagesCollection;
+use Profesia\MessagingCore\Broking\Dto\Message;
 use Profesia\MessagingCore\Test\Assets\Helper;
 
 class PubSubMessageBrokerTest extends MockeryTestCase
@@ -65,7 +66,8 @@ class PubSubMessageBrokerTest extends MockeryTestCase
 
         foreach ($response->getDispatchedMessages() as $key => $dispatchedMessage) {
             $this->assertTrue($dispatchedMessage->wasDispatchedSuccessfully());
-            $this->assertEquals($dispatchedMessage->getMessage(), $messages[$key]);
+            $this->assertEquals(json_decode($messages[$key]->toArray()[Message::EVENT_DATA], true), $dispatchedMessage->getEventData());
+            $this->assertEquals($messages[$key]->toArray()[Message::EVENT_ATTRIBUTES], $dispatchedMessage->getEventAttributes());
         }
     }
 
@@ -136,10 +138,12 @@ class PubSubMessageBrokerTest extends MockeryTestCase
         foreach ($response->getDispatchedMessages() as $key => $dispatchedMessage) {
             if ($index !== 2) {
                 $this->assertTrue($dispatchedMessage->wasDispatchedSuccessfully());
-                $this->assertEquals($dispatchedMessage->getMessage(), $messages[$key]);
+                $this->assertEquals(json_decode($messages[$key]->toArray()[Message::EVENT_DATA], true), $dispatchedMessage->getEventData());
+                $this->assertEquals($messages[$key]->toArray()[Message::EVENT_ATTRIBUTES], $dispatchedMessage->getEventAttributes());
             } else {
                 $this->assertFalse($dispatchedMessage->wasDispatchedSuccessfully());
-                $this->assertEquals($messages[$key], $dispatchedMessage->getMessage());
+                $this->assertEquals(json_decode($messages[$key]->toArray()[Message::EVENT_DATA], true), $dispatchedMessage->getEventData());
+                $this->assertEquals($messages[$key]->toArray()[Message::EVENT_ATTRIBUTES], $dispatchedMessage->getEventAttributes());
                 $this->assertEquals('Testing exception', $dispatchedMessage->getDispatchReason());
             }
 
@@ -230,7 +234,8 @@ class PubSubMessageBrokerTest extends MockeryTestCase
         $response = $broker->publish($messageCollection);
         foreach ($response->getDispatchedMessages() as $key => $dispatchedMessage) {
             $this->assertTrue($dispatchedMessage->wasDispatchedSuccessfully());
-            $this->assertEquals($dispatchedMessage->getMessage(), $allMessages[$key]);
+            $this->assertEquals($dispatchedMessage->getEventData(), json_decode($allMessages[$key]->toArray()[Message::EVENT_DATA], true));
+            $this->assertEquals($dispatchedMessage->getEventAttributes(), $allMessages[$key]->toArray()[Message::EVENT_ATTRIBUTES]);
         }
     }
 
@@ -318,12 +323,13 @@ class PubSubMessageBrokerTest extends MockeryTestCase
 
         $response = $broker->publish($messageCollection);
         foreach ($response->getDispatchedMessages() as $key => $dispatchedMessage) {
-            if ($dispatchedMessage->getMessage()->getTopic() !== 'topic2') {
+            if ($dispatchedMessage->getTopic() !== 'topic2') {
                 $this->assertTrue($dispatchedMessage->wasDispatchedSuccessfully());
             } else {
                 $this->assertFalse($dispatchedMessage->wasDispatchedSuccessfully());
             }
-            $this->assertEquals($dispatchedMessage->getMessage(), $allMessages[$key]);
+            $this->assertEquals($dispatchedMessage->getEventData(), json_decode($allMessages[$key]->toArray()[Message::EVENT_DATA], true));
+            $this->assertEquals($dispatchedMessage->getEventAttributes(), $allMessages[$key]->toArray()[Message::EVENT_ATTRIBUTES]);
         }
     }
 }

@@ -53,15 +53,6 @@ final class GroupedMessagesCollection
         return $this->messagesForTopic[$topic]->getMessages();
     }
 
-    public function getMessagesDataForTopic(string $topic): array
-    {
-        if (array_key_exists($topic, $this->messagesForTopic) === false) {
-            throw new TopicIsNotRegisteredException("Topic with name: [{$topic}] is not registered");
-        }
-
-        return $this->messagesForTopic[$topic]->getMessagesData();
-    }
-
     /**
      * @return string[]
      */

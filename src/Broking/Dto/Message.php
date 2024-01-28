@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Profesia\MessagingCore\Broking\Dto;
 
 use DateTimeImmutable;
+use JsonException;
+use Profesia\MessagingCore\Broking\Exception\MessagePayloadDecodingException;
+use Profesia\MessagingCore\Exception\AbstractRuntimeException;
 
 final class Message implements MessageInterface
 {
@@ -52,6 +55,11 @@ final class Message implements MessageInterface
         $this->payload       = $payload;
     }
 
+    /**
+     * @return array
+     *
+     * @throws AbstractRuntimeException
+     */
     public function toArray(): array
     {
         $attributes = [
@@ -64,12 +72,17 @@ final class Message implements MessageInterface
             self::EVENT_SUBSCRIBE_NAME => $this->subscribeName,
         ];
 
-        return [
-            self::EVENT_ATTRIBUTES => $attributes,
-            self::EVENT_DATA       => json_encode(
-                array_merge($attributes, [self::MESSAGE_PAYLOAD => $this->payload])
-            ),
-        ];
+        try {
+            return [
+                self::EVENT_ATTRIBUTES => $attributes,
+                self::EVENT_DATA       => json_encode(
+                    array_merge($attributes, [self::MESSAGE_PAYLOAD => $this->payload]),
+                    JSON_THROW_ON_ERROR
+                ),
+            ];
+        } catch (JsonException $e) {
+            throw new MessagePayloadDecodingException(sprintf('Failed to encode message payload. Cause: [{%s}]', $e->getMessage()));
+        }
     }
 
     public function getTopic(): string

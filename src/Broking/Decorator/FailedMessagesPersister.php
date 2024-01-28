@@ -12,20 +12,21 @@ use Profesia\MessagingCore\Persistence\DispatchedEventRepositoryInterface;
 
 class FailedMessagesPersister implements MessageBrokerInterface
 {
-    private MessageBrokerInterface $decoratedBroker;
+    private MessageBrokerInterface             $decoratedBroker;
     private DispatchedEventRepositoryInterface $repository;
 
     public function __construct(
         MessageBrokerInterface $decoratedBroker,
         DispatchedEventRepositoryInterface $repository
-    ) {
+    )
+    {
         $this->decoratedBroker = $decoratedBroker;
         $this->repository      = $repository;
     }
 
     public function publish(GroupedMessagesCollection $collection): BrokingBatchResponse
     {
-        $response = $this->decoratedBroker->publish($collection);
+        $response       = $this->decoratedBroker->publish($collection);
         $failedMessages = array_filter(
             $response->getDispatchedMessages(),
             function (DispatchedMessage $dispatchedMessage): bool {

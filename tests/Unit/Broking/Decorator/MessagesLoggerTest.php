@@ -57,7 +57,7 @@ class MessagesLoggerTest extends MockeryTestCase
                 ->withArgs(
                     [
                         "Message from {$projectName} was published",
-                        (array)json_decode($message->getMessage()->toArray()[Message::EVENT_DATA], true),
+                        $message->getEventData(),
                     ]
                 );
         }
@@ -104,8 +104,7 @@ class MessagesLoggerTest extends MockeryTestCase
         /** @var MockInterface|LoggerInterface $logger */
         $logger = Mockery::mock(LoggerInterface::class);
         foreach ($expectedResponse->getDispatchedMessages() as $dispatchedMessage) {
-            $messageData       = $dispatchedMessage->getMessage()->toArray();
-            $messageAttributes = $messageData[Message::EVENT_ATTRIBUTES];
+            $messageAttributes = $dispatchedMessage->getEventAttributes();
             $logger
                 ->shouldReceive('error')
                 ->once()
@@ -167,8 +166,7 @@ class MessagesLoggerTest extends MockeryTestCase
         /** @var MockInterface|LoggerInterface $logger */
         $logger = Mockery::mock(LoggerInterface::class);
         foreach ($expectedResponse->getDispatchedMessages() as $dispatchedMessage) {
-            $messageData       = $dispatchedMessage->getMessage()->toArray();
-            $messageAttributes = $messageData[Message::EVENT_ATTRIBUTES];
+            $messageAttributes = $dispatchedMessage->getEventAttributes();
             if ($dispatchedMessage->wasDispatchedSuccessfully() === true) {
                 $logger
                     ->shouldReceive('info')
@@ -176,7 +174,7 @@ class MessagesLoggerTest extends MockeryTestCase
                     ->withArgs(
                         [
                             "Message from {$projectName} was published",
-                            (array)json_decode($messageData[Message::EVENT_DATA], true),
+                            $dispatchedMessage->getEventData(),
                         ]
                     );
             } else {

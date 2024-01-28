@@ -50,17 +50,8 @@ final class BrokingBatchResponse
         return $this->dispatchedMessages;
     }
 
-    public function appendMessagesWithBatchStatus(bool $isSuccessful, ?string $reason = null, Message...$messages): self
+    public function appendDispatchedMessages(DispatchedMessage...$dispatchedMessages): self
     {
-        $dispatchedMessages = [];
-        $startIndex         = sizeof($this->dispatchedMessages) - 1;
-        foreach ($messages as $message) {
-            $dispatchedMessages[$startIndex++] = new DispatchedMessage(
-                $message,
-                new BrokingStatus($isSuccessful, $reason)
-            );
-        }
-
         return new self(
             ...array_merge($this->dispatchedMessages, $dispatchedMessages)
         );

@@ -21,11 +21,9 @@ final class TopicFilteringMessagesLogger extends AbstractMessagesLogger
 
     protected function shouldBeSentMessageLogged(DispatchedMessage $dispatchedMessage): bool
     {
-        $topic = $dispatchedMessage->getMessage()->getTopic();
-
         return (
             str_contains(
-                strtolower($topic),
+                strtolower($dispatchedMessage->getTopic()),
                 strtolower($this->topicSubstring)
             ) === false
         );
