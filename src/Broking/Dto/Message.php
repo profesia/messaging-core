@@ -85,12 +85,6 @@ final class Message implements MessageInterface
             self::EVENT_SUBSCRIBE_NAME => $this->subscribeName,
         ];
 
-        $test = json_encode(
-            ['a' => 'b']
-        );
-
-        $pos = strpos($test, '.');
-
         try {
 
             return [
