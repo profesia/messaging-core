@@ -6,7 +6,7 @@ namespace Profesia\MessagingCore\Broking\Dto;
 
 use DateTimeImmutable;
 use JsonException;
-use Profesia\MessagingCore\Broking\Exception\MessagePayloadDecodingException;
+use Profesia\MessagingCore\Broking\Exception\MessagePayloadEncodingException;
 use Profesia\MessagingCore\Exception\AbstractRuntimeException;
 
 final class Message implements MessageInterface
@@ -17,10 +17,10 @@ final class Message implements MessageInterface
     public const EVENT_RESOURCE       = 'resource';
     public const EVENT_PROVIDER       = 'provider';
     public const EVENT_OBJECT_ID      = 'objectId';
+    public const EVENT_SUBSCRIBE_NAME = 'subscribeName';
+    public const EVENT_DATA           = 'data';
     public const EVENT_ATTRIBUTES     = 'attributes';
     public const MESSAGE_PAYLOAD      = 'payload';
-    public const EVENT_DATA           = 'data';
-    public const EVENT_SUBSCRIBE_NAME = 'subscribeName';
 
     private string            $resource;
     private string            $eventType;
@@ -55,11 +55,6 @@ final class Message implements MessageInterface
         $this->payload       = $payload;
     }
 
-    /**
-     * @return array
-     *
-     * @throws AbstractRuntimeException
-     */
     public function toArray(): array
     {
         $attributes = [
@@ -72,7 +67,32 @@ final class Message implements MessageInterface
             self::EVENT_SUBSCRIBE_NAME => $this->subscribeName,
         ];
 
+        return [
+            self::EVENT_ATTRIBUTES => $attributes,
+            self::EVENT_DATA       => array_merge($attributes, [self::MESSAGE_PAYLOAD => $this->payload])
+        ];
+    }
+
+    public function encode(): array
+    {
+        $attributes = [
+            self::EVENT_RESOURCE       => $this->resource,
+            self::EVENT_TYPE           => $this->eventType,
+            self::EVENT_PROVIDER       => $this->provider,
+            self::EVENT_OBJECT_ID      => $this->objectId,
+            self::EVENT_OCCURRED_ON    => $this->occurredOn->format('Y-m-d H:i:s.u'),
+            self::EVENT_CORRELATION_ID => $this->correlationId,
+            self::EVENT_SUBSCRIBE_NAME => $this->subscribeName,
+        ];
+
+        $test = json_encode(
+            ['a' => 'b']
+        );
+
+        $pos = strpos($test, '.');
+
         try {
+
             return [
                 self::EVENT_ATTRIBUTES => $attributes,
                 self::EVENT_DATA       => json_encode(
@@ -81,7 +101,7 @@ final class Message implements MessageInterface
                 ),
             ];
         } catch (JsonException $e) {
-            throw new MessagePayloadDecodingException(sprintf('Failed to encode message payload. Cause: [{%s}]', $e->getMessage()));
+            throw new MessagePayloadEncodingException(sprintf('Failed to encode message payload. Cause: [{%s}]', $e->getMessage()));
         }
     }
 

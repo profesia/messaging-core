@@ -7,7 +7,7 @@ namespace Profesia\MessagingCore\Test\Integration\Broking\Dto;
 use PHPUnit\Framework\TestCase;
 use DateTimeImmutable;
 use Profesia\MessagingCore\Broking\Dto\Message;
-use Profesia\MessagingCore\Broking\Exception\MessagePayloadDecodingException;
+use Profesia\MessagingCore\Broking\Exception\MessagePayloadEncodingException;
 use Profesia\MessagingCore\Exception\AbstractRuntimeException;
 
 class MessageTest extends TestCase
@@ -15,7 +15,7 @@ class MessageTest extends TestCase
     public function provideDataForDataGettingTest(): array
     {
         return [
-            'event1' => [
+            'event1'                  => [
                 [
                     'resource'      => 'resource1',
                     'eventType'     => 'eventType1',
@@ -30,7 +30,7 @@ class MessageTest extends TestCase
                     ],
                 ],
             ],
-            'event2' => [
+            'event2'                  => [
                 [
                     'resource'      => 'resource2',
                     'eventType'     => 'eventType2',
@@ -56,10 +56,10 @@ class MessageTest extends TestCase
                     'subscribeName' => 'subscribeName3',
                     'topic'         => 'topicName3',
                     'payload'       => [
-                        'test-field' => pack('S4',1974,106,28225,32725),
+                        'test-field' => pack('S4', 1974, 106, 28225, 32725),
                     ],
                 ],
-                new MessagePayloadDecodingException('Failed to encode message payload. Cause: [{Malformed UTF-8 characters, possibly incorrectly encoded}]')
+                new MessagePayloadEncodingException('Failed to encode message payload. Cause: [{Malformed UTF-8 characters, possibly incorrectly encoded}]')
             ]
         ];
     }
@@ -97,21 +97,30 @@ class MessageTest extends TestCase
             Message::EVENT_SUBSCRIBE_NAME => $data['subscribeName'],
         ];
 
+        $messageToCompare = [
+            Message::EVENT_ATTRIBUTES => $attributes,
+            Message::EVENT_DATA       => array_merge($attributes, [Message::MESSAGE_PAYLOAD => $data['payload']])
+        ];
+
+        $this->assertEquals($messageToCompare, $message->toArray());
+        $this->assertEquals($data['topic'], $message->getTopic());
         if ($exception === null) {
-            $messageToCompare = [
+            $encodedMessageToCompare = [
                 Message::EVENT_ATTRIBUTES => $attributes,
                 Message::EVENT_DATA       => json_encode(
                     array_merge($attributes, [Message::MESSAGE_PAYLOAD => $data['payload']])
-                ),
+                )
             ];
-
-            $this->assertEquals($messageToCompare, $message->toArray());
+            $this->assertEquals(
+                $encodedMessageToCompare,
+                $message->encode()
+            );
         } else {
             $this->expectExceptionObject(
-                new MessagePayloadDecodingException('Failed to encode message payload. Cause: [{Malformed UTF-8 characters, possibly incorrectly encoded}]')
+                new MessagePayloadEncodingException('Failed to encode message payload. Cause: [{Malformed UTF-8 characters, possibly incorrectly encoded}]')
             );
-            $message->toArray();
+            $message->encode();
         }
-        $this->assertEquals($data['topic'], $message->getTopic());
     }
+
 }

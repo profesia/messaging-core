@@ -25,7 +25,7 @@ final class DispatchedMessage
 
     public function getEventData(): array
     {
-        return (array)json_decode($this->message->toArray()[Message::EVENT_DATA], true);
+        return $this->message->toArray()[Message::EVENT_DATA];
     }
 
     public function getEventAttributes(): array

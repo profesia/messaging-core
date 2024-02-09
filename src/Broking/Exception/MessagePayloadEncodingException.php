@@ -6,7 +6,7 @@ namespace Profesia\MessagingCore\Broking\Exception;
 
 use Profesia\MessagingCore\Exception\AbstractRuntimeException;
 
-final class MessagePayloadDecodingException extends AbstractRuntimeException
+final class MessagePayloadEncodingException extends AbstractRuntimeException
 {
 
 }

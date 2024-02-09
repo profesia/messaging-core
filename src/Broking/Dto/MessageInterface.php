@@ -15,5 +15,7 @@ interface MessageInterface
      */
     public function toArray(): array;
 
+    public function encode(): array;
+
     public function getTopic(): string;
 }

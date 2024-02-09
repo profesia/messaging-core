@@ -92,7 +92,7 @@ class TopicFilteringMessagesLoggerTest extends MockeryTestCase
                 ->withArgs(
                     [
                         "Message from {$projectName} was published",
-                        (array)json_decode($message->toArray()[Message::EVENT_DATA], true),
+                        $message->toArray()[Message::EVENT_DATA],
                     ]
                 );
         }

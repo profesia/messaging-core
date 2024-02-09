@@ -14,23 +14,25 @@ trait Helper
      *
      * @return Message[]
      */
-    private static function createMessages(int $number, array $forcedValues = []): array
+    private static function createMessages(int $number, array $forcedValues = [], int $startIndex = 1): array
     {
         $messages = [];
+        $index    = $startIndex;
         for ($i = 1; $i <= $number; $i++) {
             $messages[] = new Message(
-                $forcedValues['resource'] ?? "resource{$i}",
-                $forcedValues['eventType'] ?? "eventType{$i}",
-                $forcedValues['provider'] ?? "provider{$i}",
-                $forcedValues['objectId'] ?? "objectId{$i}",
+                $forcedValues['resource'] ?? "resource{$index}",
+                $forcedValues['eventType'] ?? "eventType{$index}",
+                $forcedValues['provider'] ?? "provider{$index}",
+                $forcedValues['objectId'] ?? "objectId{$index}",
                 new DateTimeImmutable(),
                 $forcedValues['correlationId'] ?? 'correlationId',
-                $forcedValues['subscribeName'] ?? "subscribeName{$i}",
-                $forcedValues['topic'] ?? "topic{$i}",
+                $forcedValues['subscribeName'] ?? "subscribeName{$index}",
+                $forcedValues['topic'] ?? "topic{$index}",
                 $forcedValues['data'] ?? [
-                'data' => $i,
+                'data' => $index,
             ]
             );
+            $index++;
         }
 
         return $messages;

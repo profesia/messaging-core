@@ -34,7 +34,7 @@ final class PubSubMessageBroker implements MessageBrokerInterface
 
             foreach ($messages as $message) {
                 try {
-                    $topic->publish($message->toArray());
+                    $topic->publish($message->encode());
                     $dispatchedMessages[$index++] = new DispatchedMessage(
                         $message,
                         new BrokingStatus(true)

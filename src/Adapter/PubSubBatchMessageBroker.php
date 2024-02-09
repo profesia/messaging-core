@@ -37,7 +37,7 @@ final class PubSubBatchMessageBroker implements MessageBrokerInterface
             foreach ($collection->getMessagesForTopic($topicName) as $key => $message) {
                 try {
                     $encodedMessages[$key]     = $message;
-                    $messagesDataInTopic[$key] = $message->toArray();
+                    $messagesDataInTopic[$key] = $message->encode();
                 } catch (AbstractRuntimeException $e) {
                     $dispatchedMessages[$key] = new DispatchedMessage(
                         $message,
