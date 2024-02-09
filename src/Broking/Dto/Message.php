@@ -7,7 +7,6 @@ namespace Profesia\MessagingCore\Broking\Dto;
 use DateTimeImmutable;
 use JsonException;
 use Profesia\MessagingCore\Broking\Exception\MessagePayloadEncodingException;
-use Profesia\MessagingCore\Exception\AbstractRuntimeException;
 
 final class Message implements MessageInterface
 {
@@ -86,7 +85,6 @@ final class Message implements MessageInterface
         ];
 
         try {
-
             return [
                 self::EVENT_ATTRIBUTES => $attributes,
                 self::EVENT_DATA       => json_encode(
