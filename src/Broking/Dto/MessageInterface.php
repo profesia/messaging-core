@@ -6,6 +6,9 @@ namespace Profesia\MessagingCore\Broking\Dto;
 
 use Profesia\MessagingCore\Exception\AbstractRuntimeException;
 
+/**
+ * @deprecated
+ */
 interface MessageInterface
 {
     /**
