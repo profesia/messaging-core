@@ -1,13 +1,13 @@
 <?php
 
-namespace Profesia\MessagingCore\Test\Integration\Broking\Dto;
+namespace Profesia\MessagingCore\Test\Integration\Broking\Dto\Receiving;
 
-use PHPUnit\Framework\TestCase;
-use Profesia\MessagingCore\Broking\Dto\Message;
-use Profesia\MessagingCore\Broking\Dto\PubSubReceivedMessage;
-use Profesia\MessagingCore\Broking\Exception\ReceivedMessageDecodingFailedException;
-use Profesia\MessagingCore\Broking\Exception\ReceivedMessageBadStructureException;
 use DateTimeImmutable;
+use PHPUnit\Framework\TestCase;
+use Profesia\MessagingCore\Broking\Dto\Receiving\PubSubReceivedMessage;
+use Profesia\MessagingCore\Broking\Dto\Sending\Message;
+use Profesia\MessagingCore\Broking\Exception\ReceivedMessageBadStructureException;
+use Profesia\MessagingCore\Broking\Exception\ReceivedMessageDecodingFailedException;
 
 class PubSubReceivedMessageTest extends TestCase
 {

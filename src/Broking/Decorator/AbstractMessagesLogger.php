@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Profesia\MessagingCore\Broking\Decorator;
 
-use Profesia\MessagingCore\Broking\Dto\BrokingBatchResponse;
-use Profesia\MessagingCore\Broking\Dto\DispatchedMessage;
-use Profesia\MessagingCore\Broking\Dto\Message;
-use Profesia\MessagingCore\Broking\Dto\GroupedMessagesCollection;
+use Profesia\MessagingCore\Broking\Dto\Sending\BrokingBatchResponse;
+use Profesia\MessagingCore\Broking\Dto\Sending\DispatchedMessage;
+use Profesia\MessagingCore\Broking\Dto\Sending\GroupedMessagesCollection;
+use Profesia\MessagingCore\Broking\Dto\Sending\Message;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Psr\Log\LoggerInterface;
 

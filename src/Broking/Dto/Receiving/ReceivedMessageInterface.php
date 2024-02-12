@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Profesia\MessagingCore\Broking\Dto;
+namespace Profesia\MessagingCore\Broking\Dto\Receiving;
 
 interface ReceivedMessageInterface
 {

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Profesia\MessagingCore\Broking\Dto;
+namespace Profesia\MessagingCore\Broking\Dto\Sending;
 
 final class DispatchedMessage
 {
-    private Message       $message;
-    private BrokingStatus $status;
+    private Message $message;
+    private BrokingStatus    $status;
 
     public function __construct(
         Message $message,
@@ -25,12 +25,12 @@ final class DispatchedMessage
 
     public function getEventData(): array
     {
-        return $this->message->toArray()[Message::EVENT_DATA];
+        return $this->message->getData();
     }
 
     public function getEventAttributes(): array
     {
-        return $this->message->toArray()[Message::EVENT_ATTRIBUTES];
+        return $this->message->getAttributes();
     }
 
     public function wasDispatchedSuccessfully(): bool

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Profesia\MessagingCore\Broking\Decorator;
 
-use Profesia\MessagingCore\Broking\Dto\DispatchedMessage;
+use Profesia\MessagingCore\Broking\Dto\Sending\DispatchedMessage;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Psr\Log\LoggerInterface;
 

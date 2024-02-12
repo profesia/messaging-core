@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Profesia\MessagingCore\Broking\Dto;
+namespace Profesia\MessagingCore\Broking\Dto\Sending;
 
 use Profesia\MessagingCore\Broking\Exception\TopicIsNotRegisteredException;
 
@@ -18,7 +18,7 @@ final class GroupedMessagesCollection
         $this->messagesForTopic = $messagesForTopic;
     }
 
-    public static function createFromMessages(Message...$messages): GroupedMessagesCollection
+    public static function createFromMessages(Message ...$messages): GroupedMessagesCollection
     {
         $groupedMessages = [];
         foreach ($messages as $message) {

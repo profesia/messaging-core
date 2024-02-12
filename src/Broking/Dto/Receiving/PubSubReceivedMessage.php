@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Profesia\MessagingCore\Broking\Dto;
+namespace Profesia\MessagingCore\Broking\Dto\Receiving;
 
 use JsonException;
+use Profesia\MessagingCore\Broking\Dto\Sending\Message;
 use Profesia\MessagingCore\Broking\Exception\ReceivedMessageBadStructureException;
 use Profesia\MessagingCore\Broking\Exception\ReceivedMessageDecodingFailedException;
 

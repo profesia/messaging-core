@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Profesia\MessagingCore\Test\Assets;
 
 use DateTimeImmutable;
-use Profesia\MessagingCore\Broking\Dto\Message;
+use Profesia\MessagingCore\Broking\Dto\Sending\Message;
 
 trait Helper
 {

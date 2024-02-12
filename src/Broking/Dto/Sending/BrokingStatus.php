@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Profesia\MessagingCore\Broking\Dto;
+namespace Profesia\MessagingCore\Broking\Dto\Sending;
 
 final class BrokingStatus
 {
-    private bool $isSuccessful;
+    private bool    $isSuccessful;
     private ?string $reason = null;
 
     public function __construct(
         bool $isSuccessful,
         ?string $reason = null
-    ) {
+    )
+    {
         $this->isSuccessful = $isSuccessful;
         $this->reason       = $reason;
     }

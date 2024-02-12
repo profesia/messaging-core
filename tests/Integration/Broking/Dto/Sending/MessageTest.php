@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Profesia\MessagingCore\Test\Integration\Broking\Dto;
+namespace Profesia\MessagingCore\Test\Integration\Broking\Dto\Sending;
 
-use PHPUnit\Framework\TestCase;
 use DateTimeImmutable;
-use Profesia\MessagingCore\Broking\Dto\Message;
+use PHPUnit\Framework\TestCase;
+use Profesia\MessagingCore\Broking\Dto\Sending\Message;
 use Profesia\MessagingCore\Broking\Exception\MessagePayloadEncodingException;
 use Profesia\MessagingCore\Exception\AbstractRuntimeException;
 

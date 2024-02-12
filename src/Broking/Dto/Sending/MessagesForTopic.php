@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Profesia\MessagingCore\Broking\Dto;
+namespace Profesia\MessagingCore\Broking\Dto\Sending;
 
 final class MessagesForTopic
 {
@@ -21,7 +21,7 @@ final class MessagesForTopic
     }
 
 
-    public static function createFromTopicAndMessages(string $topic, Message...$messages): MessagesForTopic
+    public static function createFromTopicAndMessages(string $topic, Message ...$messages): MessagesForTopic
     {
         return new self(
             $topic,
@@ -29,6 +29,9 @@ final class MessagesForTopic
         );
     }
 
+    /**
+     * @return Message[]
+     */
     public function getMessages(): array
     {
         return $this->messages;

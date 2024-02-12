@@ -11,9 +11,8 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use Profesia\MessagingCore\Adapter\PubSubBatchMessageBroker;
-use Profesia\MessagingCore\Broking\Dto\GroupedMessagesCollection;
-use Profesia\MessagingCore\Broking\Dto\Message;
-use Profesia\MessagingCore\Broking\Exception\MessagePayloadEncodingException;
+use Profesia\MessagingCore\Broking\Dto\Sending\GroupedMessagesCollection;
+use Profesia\MessagingCore\Broking\Dto\Sending\Message;
 use Profesia\MessagingCore\Test\Assets\Helper;
 
 class PubSubBatchMessageBrokerTest extends MockeryTestCase

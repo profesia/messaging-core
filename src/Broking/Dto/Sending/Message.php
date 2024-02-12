@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Profesia\MessagingCore\Broking\Dto;
+namespace Profesia\MessagingCore\Broking\Dto\Sending;
 
 use DateTimeImmutable;
 use JsonException;
 use Profesia\MessagingCore\Broking\Exception\MessagePayloadEncodingException;
 
-final class Message implements MessageInterface
+final class Message
 {
     public const EVENT_CORRELATION_ID = 'correlationId';
     public const EVENT_TYPE           = 'eventType';
@@ -95,6 +95,16 @@ final class Message implements MessageInterface
         } catch (JsonException $e) {
             throw new MessagePayloadEncodingException(sprintf('Failed to encode message payload. Cause: [{%s}]', $e->getMessage()));
         }
+    }
+
+    public function getAttributes(): array
+    {
+        return $this->toArray()[self::EVENT_ATTRIBUTES];
+    }
+
+    public function getData(): array
+    {
+        return $this->toArray()[self::EVENT_DATA];
     }
 
     public function getTopic(): string

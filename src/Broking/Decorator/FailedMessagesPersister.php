@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Profesia\MessagingCore\Broking\Decorator;
 
-use Profesia\MessagingCore\Broking\Dto\BrokingBatchResponse;
-use Profesia\MessagingCore\Broking\Dto\DispatchedMessage;
-use Profesia\MessagingCore\Broking\Dto\GroupedMessagesCollection;
+use Profesia\MessagingCore\Broking\Dto\Sending\BrokingBatchResponse;
+use Profesia\MessagingCore\Broking\Dto\Sending\DispatchedMessage;
+use Profesia\MessagingCore\Broking\Dto\Sending\GroupedMessagesCollection;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Profesia\MessagingCore\Persistence\DispatchedEventRepositoryInterface;
 
@@ -29,7 +29,7 @@ class FailedMessagesPersister implements MessageBrokerInterface
         $response       = $this->decoratedBroker->publish($collection);
         $failedMessages = array_filter(
             $response->getDispatchedMessages(),
-            function (DispatchedMessage $dispatchedMessage): bool {
+            static function (DispatchedMessage $dispatchedMessage): bool {
                 return ($dispatchedMessage->wasDispatchedSuccessfully() === false);
             }
         );
