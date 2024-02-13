@@ -1,5 +1,13 @@
 # Changelog
 
+## [v4.0.0](https://github.com/profesia/messaging-core/tree/v4.0.0) (2024-02-13)
+
+[Full Changelog](https://github.com/profesia/messaging-core/compare/v3.1.0...v4.0.0)
+
+## [v3.1.0](https://github.com/profesia/messaging-core/tree/v3.1.0) (2024-02-12)
+
+[Full Changelog](https://github.com/profesia/messaging-core/compare/v3.0.0...v3.1.0)
+
 ## [v3.0.0](https://github.com/profesia/messaging-core/tree/v3.0.0) (2023-11-20)
 
 [Full Changelog](https://github.com/profesia/messaging-core/compare/v2.3.1...v3.0.0)
