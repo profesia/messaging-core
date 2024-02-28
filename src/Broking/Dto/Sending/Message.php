@@ -21,37 +21,18 @@ final class Message
     public const EVENT_ATTRIBUTES     = 'attributes';
     public const MESSAGE_PAYLOAD      = 'payload';
 
-    private string            $resource;
-    private string            $eventType;
-    private string            $provider;
-    private string            $objectId;
-    private DateTimeImmutable $occurredOn;
-    private string            $correlationId;
-    private string            $subscribeName;
-    private string            $topic;
-    private array             $payload;
-
     public function __construct(
-        string $resource,
-        string $eventType,
-        string $provider,
-        string $objectId,
-        DateTimeImmutable $occurredOn,
-        string $correlationId,
-        string $subscribeName,
-        string $topic,
-        array $payload
+        private readonly string $resource,
+        private readonly string $eventType,
+        private readonly string $provider,
+        private readonly string $objectId,
+        private readonly DateTimeImmutable $occurredOn,
+        private readonly string $correlationId,
+        private readonly string $subscribeName,
+        private readonly string $topic,
+        private readonly array $payload
     )
     {
-        $this->resource      = $resource;
-        $this->eventType     = $eventType;
-        $this->provider      = $provider;
-        $this->objectId      = $objectId;
-        $this->occurredOn    = $occurredOn;
-        $this->correlationId = $correlationId;
-        $this->subscribeName = $subscribeName;
-        $this->topic         = $topic;
-        $this->payload       = $payload;
     }
 
     public function toArray(): array

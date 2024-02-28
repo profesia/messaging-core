@@ -8,14 +8,13 @@ use Profesia\MessagingCore\Broking\Exception\TopicIsNotRegisteredException;
 
 final class GroupedMessagesCollection
 {
-    /** @var MessagesForTopic[] */
-    private array $messagesForTopic;
-
+    /**
+     * @param MessagesForTopic[] $messagesForTopic
+     */
     private function __construct(
-        array $messagesForTopic
+        private readonly array $messagesForTopic
     )
     {
-        $this->messagesForTopic = $messagesForTopic;
     }
 
     public static function createFromMessages(Message ...$messages): GroupedMessagesCollection

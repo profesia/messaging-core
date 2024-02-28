@@ -6,18 +6,15 @@ namespace Profesia\MessagingCore\Broking\Dto\Sending;
 
 final class MessagesForTopic
 {
-    /** @var Message[] */
-    private array  $messages;
-    private string $topic;
-
     /**
      * @param string $topic
      * @param Message[] $messages
      */
-    public function __construct(string $topic, array $messages)
+    public function __construct(
+        private readonly string $topic,
+        private readonly array $messages
+    )
     {
-        $this->topic    = $topic;
-        $this->messages = $messages;
     }
 
 
