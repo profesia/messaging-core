@@ -6,14 +6,13 @@ namespace Profesia\MessagingCore\Broking\Dto\Sending;
 
 final class DispatchedMessage
 {
-    private Message $message;
-    private BrokingStatus    $status;
+    private MessageInterface $message;
+    private BrokingStatus $status;
 
     public function __construct(
-        Message $message,
+        MessageInterface $message,
         BrokingStatus $status
-    )
-    {
+    ) {
         $this->message = $message;
         $this->status  = $status;
     }

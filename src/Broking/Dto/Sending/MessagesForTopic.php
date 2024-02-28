@@ -6,13 +6,13 @@ namespace Profesia\MessagingCore\Broking\Dto\Sending;
 
 final class MessagesForTopic
 {
-    /** @var Message[] */
-    private array  $messages;
+    /** @var MessageInterface[] */
+    private array $messages;
     private string $topic;
 
     /**
-     * @param string $topic
-     * @param Message[] $messages
+     * @param string             $topic
+     * @param MessageInterface[] $messages
      */
     public function __construct(string $topic, array $messages)
     {
@@ -21,7 +21,7 @@ final class MessagesForTopic
     }
 
 
-    public static function createFromTopicAndMessages(string $topic, Message ...$messages): MessagesForTopic
+    public static function createFromTopicAndMessages(string $topic, MessageInterface ...$messages): MessagesForTopic
     {
         return new self(
             $topic,
@@ -30,7 +30,7 @@ final class MessagesForTopic
     }
 
     /**
-     * @return Message[]
+     * @return MessageInterface[]
      */
     public function getMessages(): array
     {

@@ -9,7 +9,7 @@ final class BrokingBatchResponse
     /** @var DispatchedMessage[] */
     private array $dispatchedMessages;
 
-    private function __construct(DispatchedMessage...$dispatchedMessages)
+    private function __construct(DispatchedMessage ...$dispatchedMessages)
     {
         $this->dispatchedMessages = $dispatchedMessages;
     }
@@ -19,7 +19,7 @@ final class BrokingBatchResponse
         return new self();
     }
 
-    public static function createForMessagesWithBatchStatus(bool $isSuccessful, ?string $reason = null, Message...$messages): self
+    public static function createForMessagesWithBatchStatus(bool $isSuccessful, ?string $reason = null, MessageInterface ...$messages): self
     {
         $dispatchedMessages = [];
         $index              = 0;

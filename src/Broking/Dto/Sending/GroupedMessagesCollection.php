@@ -18,7 +18,7 @@ final class GroupedMessagesCollection
         $this->messagesForTopic = $messagesForTopic;
     }
 
-    public static function createFromMessages(Message ...$messages): GroupedMessagesCollection
+    public static function createFromMessages(MessageInterface ...$messages): GroupedMessagesCollection
     {
         $groupedMessages = [];
         foreach ($messages as $message) {
@@ -42,7 +42,7 @@ final class GroupedMessagesCollection
 
     /**
      * @param string $topic
-     * @return Message[]
+     * @return MessageInterface[]
      */
     public function getMessagesForTopic(string $topic): array
     {

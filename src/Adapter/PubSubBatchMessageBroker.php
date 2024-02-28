@@ -11,6 +11,7 @@ use Profesia\MessagingCore\Broking\Dto\Sending\BrokingStatus;
 use Profesia\MessagingCore\Broking\Dto\Sending\DispatchedMessage;
 use Profesia\MessagingCore\Broking\Dto\Sending\GroupedMessagesCollection;
 use Profesia\MessagingCore\Broking\Dto\Sending\Message;
+use Profesia\MessagingCore\Broking\Dto\Sending\MessageInterface;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Profesia\MessagingCore\Exception\AbstractRuntimeException;
 
@@ -56,7 +57,7 @@ final class PubSubBatchMessageBroker implements MessageBrokerInterface
 
                 $brokingBatchResponse = $brokingBatchResponse->appendDispatchedMessages(
                     ...array_replace(
-                        array_map(static function (Message $message): DispatchedMessage {
+                        array_map(static function (MessageInterface $message): DispatchedMessage {
                             return new DispatchedMessage(
                                 $message,
                                 new BrokingStatus(
@@ -70,7 +71,7 @@ final class PubSubBatchMessageBroker implements MessageBrokerInterface
             } catch (GoogleException $e) {
                 $brokingBatchResponse = $brokingBatchResponse->appendDispatchedMessages(
                     ...array_replace(
-                        array_map(static function (Message $message) use ($e): DispatchedMessage {
+                        array_map(static function (MessageInterface $message) use ($e): DispatchedMessage {
                             return new DispatchedMessage(
                                 $message,
                                 new BrokingStatus(

@@ -8,7 +8,7 @@ use DateTimeImmutable;
 use JsonException;
 use Profesia\MessagingCore\Broking\Exception\MessagePayloadEncodingException;
 
-final class Message
+final class Message implements MessageInterface //class should rename
 {
     public const EVENT_CORRELATION_ID = 'correlationId';
     public const EVENT_TYPE           = 'eventType';
