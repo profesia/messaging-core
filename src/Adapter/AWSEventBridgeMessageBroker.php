@@ -10,7 +10,7 @@ use Profesia\MessagingCore\Broking\Dto\Sending\BrokingBatchResponse;
 use Profesia\MessagingCore\Broking\Dto\Sending\BrokingStatus;
 use Profesia\MessagingCore\Broking\Dto\Sending\DispatchedMessage;
 use Profesia\MessagingCore\Broking\Dto\Sending\GroupedMessagesCollection;
-use Profesia\MessagingCore\Broking\Dto\Sending\MessageInterface;
+use Profesia\MessagingCore\Broking\Exception\MessagePayloadEncodingException;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 
 final class AWSEventBridgeMessageBroker implements MessageBrokerInterface
@@ -28,26 +28,15 @@ final class AWSEventBridgeMessageBroker implements MessageBrokerInterface
         $dispatchedMessages = [];
 
         foreach ($collection->getTopics() as $topicName) {
-            $messages = $collection->getMessagesForTopic($topicName);
+            $messages        = $collection->getMessagesForTopic($topicName);
+            $entries         = [];
+            $encodedMessages = [];
 
-            $entries = array_map(function (MessageInterface $message) use ($topicName) {
-                return [
-                    ...$message->encode(), //todo exception
-                    'EventBusName' => $topicName,
-                ];
-            }, $messages);
-
-            try {
-                $this->eventBridgeClient->putEvents(['Entries' => $entries]);
-
-                foreach ($messages as $message) {
-                    $dispatchedMessages[] = new DispatchedMessage(
-                        $message,
-                        new BrokingStatus(true)
-                    );
-                }
-            } catch (AwsException $e) {
-                foreach ($messages as $message) {
+            foreach ($messages as $message) {
+                try {
+                    $entries[]         = [$message->encode(), 'EventBusName' => $topicName];
+                    $encodedMessages[] = $message;
+                } catch (MessagePayloadEncodingException $e) {
                     $dispatchedMessages[] = new DispatchedMessage(
                         $message,
                         new BrokingStatus(false, $e->getMessage())
@@ -55,6 +44,23 @@ final class AWSEventBridgeMessageBroker implements MessageBrokerInterface
                 }
             }
 
+            try {
+                $this->eventBridgeClient->putEvents(['Entries' => $entries]);
+
+                foreach ($encodedMessages as $successfulMessage) {
+                    $dispatchedMessages[] = new DispatchedMessage(
+                        $successfulMessage,
+                        new BrokingStatus(true)
+                    );
+                }
+            } catch (AwsException $e) {
+                foreach ($encodedMessages as $unsuccessfulMessage) {
+                    $dispatchedMessages[] = new DispatchedMessage(
+                        $unsuccessfulMessage,
+                        new BrokingStatus(false, $e->getMessage())
+                    );
+                }
+            }
         }
 
         return BrokingBatchResponse::createForMessagesWithIndividualStatus(...$dispatchedMessages);

@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace Profesia\MessagingCore\Test\Assets;
 
 use DateTimeImmutable;
-use Profesia\MessagingCore\Broking\Dto\Sending\Message;
+use Profesia\MessagingCore\Broking\Dto\Sending\PubSubMessage;
 
 trait Helper
 {
     /**
      * @param int $number
      *
-     * @return Message[]
+     * @return PubSubMessage[]
      */
     private static function createMessages(int $number, array $forcedValues = [], int $startIndex = 1): array
     {
         $messages = [];
         $index    = $startIndex;
         for ($i = 1; $i <= $number; $i++) {
-            $messages[] = new Message(
+            $messages[] = new PubSubMessage(
                 $forcedValues['resource'] ?? "resource{$index}",
                 $forcedValues['eventType'] ?? "eventType{$index}",
                 $forcedValues['provider'] ?? "provider{$index}",

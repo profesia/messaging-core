@@ -10,7 +10,6 @@ use Profesia\MessagingCore\Broking\Dto\Sending\BrokingBatchResponse;
 use Profesia\MessagingCore\Broking\Dto\Sending\BrokingStatus;
 use Profesia\MessagingCore\Broking\Dto\Sending\DispatchedMessage;
 use Profesia\MessagingCore\Broking\Dto\Sending\GroupedMessagesCollection;
-use Profesia\MessagingCore\Broking\Dto\Sending\Message;
 use Profesia\MessagingCore\Broking\Dto\Sending\MessageInterface;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Profesia\MessagingCore\Exception\AbstractRuntimeException;

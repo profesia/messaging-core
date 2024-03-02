@@ -10,7 +10,7 @@ use Mockery\MockInterface;
 use Profesia\MessagingCore\Broking\Decorator\TopicFilteringMessagesLogger;
 use Profesia\MessagingCore\Broking\Dto\Sending\BrokingBatchResponse;
 use Profesia\MessagingCore\Broking\Dto\Sending\GroupedMessagesCollection;
-use Profesia\MessagingCore\Broking\Dto\Sending\Message;
+use Profesia\MessagingCore\Broking\Dto\Sending\PubSubMessage;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Profesia\MessagingCore\Test\Assets\Helper;
 use Psr\Log\LoggerInterface;
@@ -73,7 +73,7 @@ class TopicFilteringMessagesLoggerTest extends MockeryTestCase
             );
 
         $projectName      = 'projectName';
-        $filteredMessages = array_filter($allMessages, function (Message $message) use ($targetSubstring) {
+        $filteredMessages = array_filter($allMessages, function (PubSubMessage $message) use ($targetSubstring) {
             return (
                 str_contains(
                     strtolower($message->getTopic()),
@@ -84,7 +84,7 @@ class TopicFilteringMessagesLoggerTest extends MockeryTestCase
 
         /** @var MockInterface|LoggerInterface $logger */
         $logger = Mockery::mock(LoggerInterface::class);
-        /** @var Message $message */
+        /** @var PubSubMessage $message */
         foreach ($filteredMessages as $message) {
             $logger
                 ->shouldReceive('info')
@@ -92,7 +92,7 @@ class TopicFilteringMessagesLoggerTest extends MockeryTestCase
                 ->withArgs(
                     [
                         "Message from {$projectName} was published",
-                        $message->toArray()[Message::EVENT_DATA],
+                        $message->toArray()[PubSubMessage::EVENT_DATA],
                     ]
                 );
         }
@@ -147,7 +147,7 @@ class TopicFilteringMessagesLoggerTest extends MockeryTestCase
                 ->once()
                 ->withArgs(
                     [
-                        "Error while publishing messages in {$projectName}. Message: Resource - [{$messageAttributes[Message::EVENT_TYPE]}], ID - [{$messageAttributes[Message::EVENT_OBJECT_ID]}]. Cause: [{$cause}]",
+                        "Error while publishing messages in {$projectName}. Message: Resource - [{$messageAttributes[PubSubMessage::EVENT_TYPE]}], ID - [{$messageAttributes[PubSubMessage::EVENT_OBJECT_ID]}]. Cause: [{$cause}]",
                     ]
                 );
         }
