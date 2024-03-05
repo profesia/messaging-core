@@ -8,7 +8,10 @@ use DateTimeImmutable;
 use JsonException;
 use Profesia\MessagingCore\Broking\Exception\MessagePayloadEncodingException;
 
-final class PubSubMessage extends AbstractMessage
+/**
+ * @deprecated Use PubSubMessage instead.
+ */
+final class Message extends AbstractMessage
 {
     public const EVENT_RESOURCE       = 'resource';
     public const EVENT_OBJECT_ID      = 'objectId';
@@ -98,3 +101,4 @@ final class PubSubMessage extends AbstractMessage
         return $this->toArray()[self::EVENT_DATA];
     }
 }
+

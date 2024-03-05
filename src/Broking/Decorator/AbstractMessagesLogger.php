@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Profesia\MessagingCore\Broking\Decorator;
 
+use Profesia\MessagingCore\Broking\Dto\Sending\AbstractMessage;
 use Profesia\MessagingCore\Broking\Dto\Sending\BrokingBatchResponse;
 use Profesia\MessagingCore\Broking\Dto\Sending\DispatchedMessage;
 use Profesia\MessagingCore\Broking\Dto\Sending\GroupedMessagesCollection;
-use Profesia\MessagingCore\Broking\Dto\Sending\PubSubMessage;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -46,7 +46,7 @@ abstract class AbstractMessagesLogger implements MessageBrokerInterface
 
             $messageAttributes = $dispatchedMessage->getEventAttributes();
             $this->logger->error(
-                "Error while publishing messages in {$this->projectName}. Message: Resource - [{$messageAttributes[PubSubMessage::EVENT_TYPE]}], ID - [{$messageAttributes[PubSubMessage::EVENT_OBJECT_ID]}]. Cause: [{$dispatchedMessage->getDispatchReason()}]"
+                "Error while publishing messages in {$this->projectName}. Message: Resource - [{$messageAttributes[AbstractMessage::EVENT_TYPE]}], CORRELATION ID - [{$messageAttributes[AbstractMessage::EVENT_CORRELATION_ID]}]. Cause: [{$dispatchedMessage->getDispatchReason()}]"
             );
         }
 

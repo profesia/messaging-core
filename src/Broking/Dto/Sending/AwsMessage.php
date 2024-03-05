@@ -8,27 +8,13 @@ use DateTimeImmutable;
 use JsonException;
 use Profesia\MessagingCore\Broking\Exception\MessagePayloadEncodingException;
 
-class AWSEventBridgeMessage implements MessageInterface
+class AwsMessage extends AbstractMessage
 {
     //aws attributes
     public const DETAIL_TYPE = 'DetailType';
     public const TIME        = 'Time';
     public const SOURCE      = 'Source';
     public const DETAIL      = 'Detail';
-
-    //message attributes
-    public const EVENT_PROVIDER       = 'provider';
-    public const EVENT_TYPE           = 'eventType';
-    public const EVENT_CORRELATION_ID = 'correlationId';
-    public const EVENT_OCCURRED_ON    = 'eventOccurredOn';
-    public const MESSAGE_PAYLOAD      = 'payload';
-
-    private string $topic; //topic = eventBusName
-    private string $provider;
-    private string $eventType;
-    private DateTimeImmutable $eventOccurredOn;
-    private string $correlationId;
-    private array $payload;
 
     public function __construct(
         string $topic,
@@ -38,12 +24,14 @@ class AWSEventBridgeMessage implements MessageInterface
         string $correlationId,
         array $payload
     ) {
-        $this->topic           = $topic;
-        $this->provider        = $provider;
-        $this->eventType       = $eventType;
-        $this->eventOccurredOn = $eventOccurredOn;
-        $this->correlationId   = $correlationId;
-        $this->payload         = $payload;
+        parent::__construct(
+            $topic,
+            $provider,
+            $eventType,
+            $eventOccurredOn,
+            $correlationId,
+            $payload
+        );
     }
 
     public function encode(): array
@@ -69,11 +57,6 @@ class AWSEventBridgeMessage implements MessageInterface
             $this->getAwsAttributes(),
             [self::DETAIL => array_merge($this->getMessageAttributes(), [self::MESSAGE_PAYLOAD => $this->payload])]
         );
-    }
-
-    public function getTopic(): string
-    {
-        return $this->topic;
     }
 
     public function getAttributes(): array

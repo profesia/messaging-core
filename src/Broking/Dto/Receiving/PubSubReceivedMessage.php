@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Profesia\MessagingCore\Broking\Dto\Receiving;
 
 use JsonException;
-use Profesia\MessagingCore\Broking\Dto\Sending\PubSubMessage;
+use Profesia\MessagingCore\Broking\Dto\Sending\Message;
 use Profesia\MessagingCore\Broking\Exception\ReceivedMessageBadStructureException;
 use Profesia\MessagingCore\Broking\Exception\ReceivedMessageDecodingFailedException;
 
@@ -22,15 +22,15 @@ final class PubSubReceivedMessage implements ReceivedMessageInterface
 
     public static function createFromRaw(array $attributes, array $data): self
     {
-        $eventTypeKey = PubSubMessage::EVENT_TYPE;
+        $eventTypeKey = Message::EVENT_TYPE;
         if (array_key_exists($eventTypeKey, $attributes) === false) {
             throw new ReceivedMessageBadStructureException(sprintf('Missing offset: [%s] in attributes', $eventTypeKey));
         }
 
         return new self([
             self::MESSAGE_KEY => [
-                PubSubMessage::EVENT_ATTRIBUTES => $attributes,
-                PubSubMessage::EVENT_DATA       => $data,
+                Message::EVENT_ATTRIBUTES => $attributes,
+                Message::EVENT_DATA       => $data,
             ],
         ]);
     }
@@ -51,12 +51,12 @@ final class PubSubReceivedMessage implements ReceivedMessageInterface
                 throw new ReceivedMessageBadStructureException('Missing offset: [message] in path: []');
             }
 
-            $attributesKey = PubSubMessage::EVENT_ATTRIBUTES;
+            $attributesKey = Message::EVENT_ATTRIBUTES;
             if (array_key_exists($attributesKey, $envelope[$messageKey]) === false) {
                 throw new ReceivedMessageBadStructureException("Missing offset: [$attributesKey] in path: [message]");
             }
 
-            $dataKey = PubSubMessage::EVENT_DATA;
+            $dataKey = Message::EVENT_DATA;
             if (array_key_exists($dataKey, $envelope[$messageKey]) === false) {
                 throw new ReceivedMessageBadStructureException("Missing offset: [$dataKey] in path: [message]");
             }
@@ -70,7 +70,7 @@ final class PubSubReceivedMessage implements ReceivedMessageInterface
                 JSON_THROW_ON_ERROR
             );
 
-            $eventTypeKey = PubSubMessage::EVENT_TYPE;
+            $eventTypeKey = Message::EVENT_TYPE;
             if (array_key_exists($eventTypeKey, $envelope[$messageKey][$attributesKey]) === false) {
                 throw new ReceivedMessageBadStructureException("Missing offset: [$eventTypeKey] in path: [message, $attributesKey]");
             }
@@ -83,12 +83,12 @@ final class PubSubReceivedMessage implements ReceivedMessageInterface
 
     public function getEventType(): string
     {
-        return $this->message[self::MESSAGE_KEY][PubSubMessage::EVENT_ATTRIBUTES][PubSubMessage::EVENT_TYPE];
+        return $this->message[self::MESSAGE_KEY][Message::EVENT_ATTRIBUTES][Message::EVENT_TYPE];
     }
 
     public function getSubscribeName(): string
     {
-        return $this->message[self::MESSAGE_KEY][PubSubMessage::EVENT_ATTRIBUTES][PubSubMessage::EVENT_SUBSCRIBE_NAME];
+        return $this->message[self::MESSAGE_KEY][Message::EVENT_ATTRIBUTES][Message::EVENT_SUBSCRIBE_NAME];
     }
 
     public function getDecodedMessage(): array

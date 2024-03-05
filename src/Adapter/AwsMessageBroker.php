@@ -10,10 +10,10 @@ use Profesia\MessagingCore\Broking\Dto\Sending\BrokingBatchResponse;
 use Profesia\MessagingCore\Broking\Dto\Sending\BrokingStatus;
 use Profesia\MessagingCore\Broking\Dto\Sending\DispatchedMessage;
 use Profesia\MessagingCore\Broking\Dto\Sending\GroupedMessagesCollection;
-use Profesia\MessagingCore\Broking\Exception\MessagePayloadEncodingException;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
+use Profesia\MessagingCore\Exception\AbstractRuntimeException;
 
-final class AWSEventBridgeMessageBroker implements MessageBrokerInterface
+final class AwsMessageBroker implements MessageBrokerInterface
 {
     private EventBridgeClient $eventBridgeClient;
 
@@ -36,7 +36,7 @@ final class AWSEventBridgeMessageBroker implements MessageBrokerInterface
                 try {
                     $entries[]         = [$message->encode(), 'EventBusName' => $topicName];
                     $encodedMessages[] = $message;
-                } catch (MessagePayloadEncodingException $e) {
+                } catch (AbstractRuntimeException $e) {
                     $dispatchedMessages[] = new DispatchedMessage(
                         $message,
                         new BrokingStatus(false, $e->getMessage())

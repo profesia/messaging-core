@@ -8,11 +8,11 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use Profesia\MessagingCore\Broking\Decorator\MessagesLogger;
+use Profesia\MessagingCore\Broking\Dto\Sending\AbstractMessage;
 use Profesia\MessagingCore\Broking\Dto\Sending\BrokingBatchResponse;
 use Profesia\MessagingCore\Broking\Dto\Sending\BrokingStatus;
 use Profesia\MessagingCore\Broking\Dto\Sending\DispatchedMessage;
 use Profesia\MessagingCore\Broking\Dto\Sending\GroupedMessagesCollection;
-use Profesia\MessagingCore\Broking\Dto\Sending\PubSubMessage;
 use Profesia\MessagingCore\Broking\MessageBrokerInterface;
 use Profesia\MessagingCore\Test\Assets\Helper;
 use Psr\Log\LoggerInterface;
@@ -110,7 +110,7 @@ class MessagesLoggerTest extends MockeryTestCase
                 ->once()
                 ->withArgs(
                     [
-                        "Error while publishing messages in {$projectName}. Message: Resource - [{$messageAttributes[PubSubMessage::EVENT_TYPE]}], ID - [{$messageAttributes[PubSubMessage::EVENT_OBJECT_ID]}]. Cause: [{$cause}]",
+                        "Error while publishing messages in {$projectName}. Message: Resource - [{$messageAttributes[AbstractMessage::EVENT_TYPE]}], CORRELATION ID - [{$messageAttributes[AbstractMessage::EVENT_CORRELATION_ID]}]. Cause: [{$cause}]",
                     ]
                 );
         }
@@ -183,7 +183,7 @@ class MessagesLoggerTest extends MockeryTestCase
                     ->once()
                     ->withArgs(
                         [
-                            "Error while publishing messages in {$projectName}. Message: Resource - [{$messageAttributes[PubSubMessage::EVENT_TYPE]}], ID - [{$messageAttributes[PubSubMessage::EVENT_OBJECT_ID]}]. Cause: [{$dispatchedMessage->getDispatchReason()}]",
+                            "Error while publishing messages in {$projectName}. Message: Resource - [{$messageAttributes[AbstractMessage::EVENT_TYPE]}], CORRELATION ID - [{$messageAttributes[AbstractMessage::EVENT_CORRELATION_ID]}]. Cause: [{$dispatchedMessage->getDispatchReason()}]",
                         ]
                     );
             }
