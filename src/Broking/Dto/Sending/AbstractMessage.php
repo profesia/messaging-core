@@ -16,12 +16,12 @@ abstract class AbstractMessage implements MessageInterface
     public const MESSAGE_PAYLOAD      = 'payload';
 
     public function __construct(
-        protected string $topic,
-        protected string $provider,
-        protected string $eventType,
-        protected DateTimeImmutable $eventOccurredOn,
-        protected string $correlationId,
-        protected array $payload
+        protected readonly string $topic,
+        protected readonly string $provider,
+        protected readonly string $eventType,
+        protected readonly DateTimeImmutable $eventOccurredOn,
+        protected readonly string $correlationId,
+        protected readonly array $payload,
     ) {
     }
 

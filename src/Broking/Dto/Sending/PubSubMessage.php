@@ -16,20 +16,16 @@ final class PubSubMessage extends AbstractMessage
     public const EVENT_DATA           = 'data';
     public const EVENT_ATTRIBUTES     = 'attributes';
 
-    private string $resource;
-    private string $objectId;
-    private string $subscribeName;
-
     public function __construct(
-        string $resource,
+        readonly string $resource,
         string $eventType,
         string $provider,
-        string $objectId,
+        readonly string $objectId,
         DateTimeImmutable $eventOccurredOn,
         string $correlationId,
-        string $subscribeName,
+        readonly string $subscribeName,
         string $topic,
-        array $payload
+        array $payload,
     ) {
         parent::__construct(
             $topic,
@@ -37,12 +33,8 @@ final class PubSubMessage extends AbstractMessage
             $eventType,
             $eventOccurredOn,
             $correlationId,
-            $payload
+            $payload,
         );
-
-        $this->resource      = $resource;
-        $this->objectId      = $objectId;
-        $this->subscribeName = $subscribeName;
     }
 
     public function toArray(): array
@@ -59,7 +51,7 @@ final class PubSubMessage extends AbstractMessage
 
         return [
             self::EVENT_ATTRIBUTES => $attributes,
-            self::EVENT_DATA       => array_merge($attributes, [self::MESSAGE_PAYLOAD => $this->payload]),
+            self::EVENT_DATA       => [...$attributes, self::MESSAGE_PAYLOAD => $this->payload],
         ];
     }
 
@@ -79,7 +71,7 @@ final class PubSubMessage extends AbstractMessage
             return [
                 self::EVENT_ATTRIBUTES => $attributes,
                 self::EVENT_DATA       => json_encode(
-                    array_merge($attributes, [self::MESSAGE_PAYLOAD => $this->payload]),
+                    [...$attributes, self::MESSAGE_PAYLOAD => $this->payload],
                     JSON_THROW_ON_ERROR
                 ),
             ];

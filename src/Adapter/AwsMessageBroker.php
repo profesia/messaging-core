@@ -15,12 +15,9 @@ use Profesia\MessagingCore\Exception\AbstractRuntimeException;
 
 final class AwsMessageBroker implements MessageBrokerInterface
 {
-    private EventBridgeClient $eventBridgeClient;
-
     public function __construct(
-        EventBridgeClient $eventBridgeClient
+        private readonly EventBridgeClient $eventBridgeClient,
     ) {
-        $this->eventBridgeClient = $eventBridgeClient;
     }
 
     public function publish(GroupedMessagesCollection $collection): BrokingBatchResponse

@@ -22,7 +22,7 @@ class AwsMessage extends AbstractMessage
         string $eventType,
         DateTimeImmutable $eventOccurredOn,
         string $correlationId,
-        array $payload
+        array $payload,
     ) {
         parent::__construct(
             $topic,
@@ -30,22 +30,20 @@ class AwsMessage extends AbstractMessage
             $eventType,
             $eventOccurredOn,
             $correlationId,
-            $payload
+            $payload,
         );
     }
 
     public function encode(): array
     {
         try {
-            return array_merge(
-                $this->getAwsAttributes(),
-                [
-                    self::DETAIL => json_encode(
-                        array_merge($this->getMessageAttributes(), [self::MESSAGE_PAYLOAD => $this->payload]),
-                        JSON_THROW_ON_ERROR
-                    ),
-                ]
-            );
+            return [
+                ...$this->getAwsAttributes(),
+                self::DETAIL => json_encode(
+                    [...$this->getMessageAttributes(), self::MESSAGE_PAYLOAD => $this->payload],
+                    JSON_THROW_ON_ERROR
+                ),
+            ];
         } catch (JsonException $e) {
             throw new MessagePayloadEncodingException(sprintf('Failed to encode message payload. Cause: [{%s}]', $e->getMessage()));
         }
@@ -53,10 +51,10 @@ class AwsMessage extends AbstractMessage
 
     public function toArray(): array
     {
-        return array_merge(
-            $this->getAwsAttributes(),
-            [self::DETAIL => array_merge($this->getMessageAttributes(), [self::MESSAGE_PAYLOAD => $this->payload])]
-        );
+        return [
+            ...$this->getAwsAttributes(),
+            self::DETAIL => [...$this->getMessageAttributes(), self::MESSAGE_PAYLOAD => $this->payload]
+        ];
     }
 
     public function getAttributes(): array
