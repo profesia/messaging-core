@@ -15,27 +15,14 @@ abstract class AbstractMessage implements MessageInterface
     public const EVENT_OCCURRED_ON    = 'eventOccurredOn';
     public const MESSAGE_PAYLOAD      = 'payload';
 
-    protected string $topic;
-    protected string $provider;
-    protected string $eventType;
-    protected DateTimeImmutable $eventOccurredOn;
-    protected string $correlationId;
-    protected array $payload;
-
     public function __construct(
-        string $topic,
-        string $provider,
-        string $eventType,
-        DateTimeImmutable $eventOccurredOn,
-        string $correlationId,
-        array $payload
+        protected string $topic,
+        protected string $provider,
+        protected string $eventType,
+        protected DateTimeImmutable $eventOccurredOn,
+        protected string $correlationId,
+        protected array $payload
     ) {
-        $this->topic           = $topic;
-        $this->provider        = $provider;
-        $this->eventType       = $eventType;
-        $this->eventOccurredOn = $eventOccurredOn;
-        $this->correlationId   = $correlationId;
-        $this->payload         = $payload;
     }
 
     abstract public function encode(): array;

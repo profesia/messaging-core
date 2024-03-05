@@ -13,15 +13,12 @@ use Psr\Log\LoggerInterface;
 
 abstract class AbstractMessagesLogger implements MessageBrokerInterface
 {
-    private string                 $projectName;
-    private MessageBrokerInterface $decoratedBroker;
-    private LoggerInterface        $logger;
-
-    public function __construct(MessageBrokerInterface $decoratedBroker, LoggerInterface $logger, string $projectName)
+    public function __construct(
+        private readonly MessageBrokerInterface $decoratedBroker,
+        private readonly LoggerInterface $logger,
+        private readonly string $projectName
+    )
     {
-        $this->decoratedBroker = $decoratedBroker;
-        $this->logger          = $logger;
-        $this->projectName     = $projectName;
     }
 
 

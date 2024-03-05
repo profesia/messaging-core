@@ -8,5 +8,4 @@ use RuntimeException;
 
 abstract class AbstractRuntimeException extends RuntimeException
 {
-
 }

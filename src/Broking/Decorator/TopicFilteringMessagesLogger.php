@@ -10,12 +10,13 @@ use Psr\Log\LoggerInterface;
 
 final class TopicFilteringMessagesLogger extends AbstractMessagesLogger
 {
-    private string $topicSubstring;
-
-    public function __construct(MessageBrokerInterface $decoratedBroker, LoggerInterface $logger, string $projectName, string $topicSubstring)
+    public function __construct(
+        MessageBrokerInterface $decoratedBroker,
+        LoggerInterface $logger,
+        string $projectName,
+        private readonly string $topicSubstring
+    )
     {
-        $this->topicSubstring = $topicSubstring;
-
         parent::__construct($decoratedBroker, $logger, $projectName);
     }
 

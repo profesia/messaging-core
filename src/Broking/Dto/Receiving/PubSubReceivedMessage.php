@@ -13,11 +13,10 @@ final class PubSubReceivedMessage implements ReceivedMessageInterface
 {
     public const MESSAGE_KEY = 'message';
 
-    private array $message;
-
-    private function __construct(array $message)
+    private function __construct(
+        private readonly array $message
+    )
     {
-        $this->message = $message;
     }
 
     public static function createFromRaw(array $attributes, array $data): self

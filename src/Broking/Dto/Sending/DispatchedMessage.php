@@ -6,15 +6,10 @@ namespace Profesia\MessagingCore\Broking\Dto\Sending;
 
 final class DispatchedMessage
 {
-    private MessageInterface $message;
-    private BrokingStatus $status;
-
     public function __construct(
-        MessageInterface $message,
-        BrokingStatus $status
+        private readonly MessageInterface $message,
+        private readonly BrokingStatus $status
     ) {
-        $this->message = $message;
-        $this->status  = $status;
     }
 
     public function getTopic(): string

@@ -11,15 +11,11 @@ use Profesia\MessagingCore\Persistence\DispatchedEventRepositoryInterface;
 
 class AllMessagesPersister implements MessageBrokerInterface
 {
-    private MessageBrokerInterface $decoratedBroker;
-    private DispatchedEventRepositoryInterface $repository;
-
     public function __construct(
-        MessageBrokerInterface $decoratedBroker,
-        DispatchedEventRepositoryInterface $repository
-    ) {
-        $this->decoratedBroker = $decoratedBroker;
-        $this->repository      = $repository;
+        private readonly MessageBrokerInterface $decoratedBroker,
+        private readonly DispatchedEventRepositoryInterface $repository
+    )
+    {
     }
 
     /**

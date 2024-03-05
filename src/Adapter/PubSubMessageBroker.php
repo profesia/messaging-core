@@ -15,13 +15,10 @@ use Profesia\MessagingCore\Exception\AbstractRuntimeException;
 
 final class PubSubMessageBroker implements MessageBrokerInterface
 {
-    private PubSubClient $pubSubClient;
-
     public function __construct(
-        PubSubClient $pubSubClient
+        private readonly PubSubClient $pubSubClient
     )
     {
-        $this->pubSubClient = $pubSubClient;
     }
 
     public function publish(GroupedMessagesCollection $collection): BrokingBatchResponse
