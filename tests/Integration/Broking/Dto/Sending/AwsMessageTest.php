@@ -37,8 +37,8 @@ class AwsMessageTest extends TestCase
                     'eventType'       => 'eventType1',
                     'eventOccurredOn' => new DateTimeImmutable(),
                     'correlationId'   => 'correlationId1',
-                    'payload'         => [
-                        'key' => 'value',
+                    'payload'       => [
+                        'test-field' => pack('S4', 1974, 106, 28225, 32725),
                     ],
                     'resource'        => 'resource1',
                     'objectId'        => 'objectId1',
