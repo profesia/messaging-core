@@ -23,6 +23,9 @@ class AwsMessage extends AbstractMessage
         DateTimeImmutable $eventOccurredOn,
         string $correlationId,
         array $payload,
+        string $resource,
+        string $objectId,
+        string $subscribeName,
     ) {
         parent::__construct(
             $topic,
@@ -31,6 +34,9 @@ class AwsMessage extends AbstractMessage
             $eventOccurredOn,
             $correlationId,
             $payload,
+            $resource,
+            $objectId,
+            $subscribeName,
         );
     }
 
@@ -53,7 +59,7 @@ class AwsMessage extends AbstractMessage
     {
         return [
             ...$this->getAwsAttributes(),
-            self::DETAIL => [...$this->getMessageAttributes(), self::MESSAGE_PAYLOAD => $this->payload]
+            self::DETAIL => [...$this->getMessageAttributes(), self::MESSAGE_PAYLOAD => $this->payload],
         ];
     }
 
@@ -83,6 +89,9 @@ class AwsMessage extends AbstractMessage
             self::EVENT_TYPE           => $this->eventType,
             self::EVENT_CORRELATION_ID => $this->correlationId,
             self::EVENT_OCCURRED_ON    => $this->eventOccurredOn->format('Y-m-d H:i:s.u'),
+            self::EVENT_RESOURCE       => $this->resource,
+            self::EVENT_OBJECT_ID      => $this->objectId,
+            self::EVENT_SUBSCRIBE_NAME => $this->subscribeName,
         ];
     }
 }

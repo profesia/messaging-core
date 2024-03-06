@@ -149,7 +149,7 @@ class TopicFilteringMessagesLoggerTest extends MockeryTestCase
                 ->once()
                 ->withArgs(
                     [
-                        "Error while publishing messages in {$projectName}. Message: Resource - [{$messageAttributes[AbstractMessage::EVENT_TYPE]}], CORRELATION ID - [{$messageAttributes[AbstractMessage::EVENT_CORRELATION_ID]}]. Cause: [{$cause}]",
+                        "Error while publishing messages in {$projectName}. Message: Resource - [{$messageAttributes[AbstractMessage::EVENT_TYPE]}], ID - [{$messageAttributes[AbstractMessage::EVENT_OBJECT_ID]}]. Cause: [{$cause}]",
                     ]
                 );
         }

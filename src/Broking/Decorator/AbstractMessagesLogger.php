@@ -43,7 +43,7 @@ abstract class AbstractMessagesLogger implements MessageBrokerInterface
 
             $messageAttributes = $dispatchedMessage->getEventAttributes();
             $this->logger->error(
-                "Error while publishing messages in {$this->projectName}. Message: Resource - [{$messageAttributes[AbstractMessage::EVENT_TYPE]}], CORRELATION ID - [{$messageAttributes[AbstractMessage::EVENT_CORRELATION_ID]}]. Cause: [{$dispatchedMessage->getDispatchReason()}]"
+                "Error while publishing messages in {$this->projectName}. Message: Resource - [{$messageAttributes[AbstractMessage::EVENT_TYPE]}], ID - [{$messageAttributes[AbstractMessage::EVENT_OBJECT_ID]}]. Cause: [{$dispatchedMessage->getDispatchReason()}]"
             );
         }
 

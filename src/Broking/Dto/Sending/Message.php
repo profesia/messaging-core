@@ -13,20 +13,17 @@ use Profesia\MessagingCore\Broking\Exception\MessagePayloadEncodingException;
  */
 final class Message extends AbstractMessage
 {
-    public const EVENT_RESOURCE       = 'resource';
-    public const EVENT_OBJECT_ID      = 'objectId';
-    public const EVENT_SUBSCRIBE_NAME = 'subscribeName';
-    public const EVENT_DATA           = 'data';
-    public const EVENT_ATTRIBUTES     = 'attributes';
+    public const EVENT_DATA       = 'data';
+    public const EVENT_ATTRIBUTES = 'attributes';
 
     public function __construct(
-        readonly string $resource,
+        string $resource,
         string $eventType,
         string $provider,
-        readonly string $objectId,
+        string $objectId,
         DateTimeImmutable $eventOccurredOn,
         string $correlationId,
-        readonly string $subscribeName,
+        string $subscribeName,
         string $topic,
         array $payload,
     ) {
@@ -37,6 +34,9 @@ final class Message extends AbstractMessage
             $eventOccurredOn,
             $correlationId,
             $payload,
+            $resource,
+            $objectId,
+            $subscribeName,
         );
     }
 
