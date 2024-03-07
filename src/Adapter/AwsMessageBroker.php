@@ -31,7 +31,7 @@ final class AwsMessageBroker implements MessageBrokerInterface
 
             foreach ($messages as $message) {
                 try {
-                    $entries[]         = [$message->encode(), 'EventBusName' => $topicName];
+                    $entries[]         = [...$message->encode(), 'EventBusName' => $topicName];
                     $encodedMessages[] = $message;
                 } catch (AbstractRuntimeException $e) {
                     $dispatchedMessages[] = new DispatchedMessage(
