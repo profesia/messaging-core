@@ -24,7 +24,7 @@
         "ext-json": "*",
         "ramsey/uuid": "^4.2",
         "google/cloud-pubsub": "^1.39",
-        "psr/log": "^1.1 || ^2.0",
+        "psr/log": "^1.1 || ^2.0 || ^3.0",
         "aws/aws-sdk-php": "^3.298"
     },
     "require-dev": {
