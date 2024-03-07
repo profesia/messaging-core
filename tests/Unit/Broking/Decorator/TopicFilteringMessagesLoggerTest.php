@@ -25,15 +25,15 @@ class TopicFilteringMessagesLoggerTest extends MockeryTestCase
     {
         return [
             'topic-name-lower-case' => [
-                static::createMessages(11),
+                static::createPubSubMessages(11),
                 'topic1',
             ],
             'topic-name-upper-case' => [
-                static::createMessages(11),
+                static::createPubSubMessages(11),
                 'TOPIC2',
             ],
             'topic-name-not-matching' => [
-                static::createMessages(5),
+                static::createPubSubMessages(5),
                 'not-matching',
             ],
             /*[
@@ -113,7 +113,7 @@ class TopicFilteringMessagesLoggerTest extends MockeryTestCase
 
     public function testCanHandleFailedMessages(): void
     {
-        $messages         = static::createMessages(3);
+        $messages         = static::createPubSubMessages(3);
         $collection       = GroupedMessagesCollection::createFromMessages(
             ...$messages
         );

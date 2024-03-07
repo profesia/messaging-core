@@ -20,7 +20,7 @@ class AllMessagesPersisterTest extends MockeryTestCase
 
     public function testCanPublish(): void
     {
-        $messages         = static::createMessages(3);
+        $messages         = static::createPubSubMessages(3);
         $collection       = GroupedMessagesCollection::createFromMessages(
             ...$messages
         );

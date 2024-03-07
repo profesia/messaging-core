@@ -23,7 +23,7 @@ class MessagesLoggerTest extends MockeryTestCase
 
     public function testCanHandleSuccessfulMessages(): void
     {
-        $messages         = static::createMessages(3);
+        $messages         = static::createPubSubMessages(3);
         $collection       = GroupedMessagesCollection::createFromMessages(
             ...$messages
         );
@@ -74,7 +74,7 @@ class MessagesLoggerTest extends MockeryTestCase
 
     public function testCanHandleFailedMessages(): void
     {
-        $messages         = static::createMessages(3);
+        $messages         = static::createPubSubMessages(3);
         $collection       = GroupedMessagesCollection::createFromMessages(
             ...$messages
         );
@@ -127,7 +127,7 @@ class MessagesLoggerTest extends MockeryTestCase
 
     public function testCanHandleMixedMessages(): void
     {
-        $messages         = static::createMessages(5);
+        $messages         = static::createPubSubMessages(5);
         $collection       = GroupedMessagesCollection::createFromMessages(
             ...$messages
         );

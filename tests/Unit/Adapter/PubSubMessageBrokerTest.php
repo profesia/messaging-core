@@ -13,6 +13,7 @@ use Mockery\MockInterface;
 use Profesia\MessagingCore\Adapter\PubSubMessageBroker;
 use Profesia\MessagingCore\Broking\Dto\Sending\GroupedMessagesCollection;
 use Profesia\MessagingCore\Broking\Dto\Sending\Message;
+use Profesia\MessagingCore\Broking\Dto\Sending\PubSubMessage;
 use Profesia\MessagingCore\Test\Assets\Helper;
 
 class PubSubMessageBrokerTest extends MockeryTestCase
@@ -31,7 +32,7 @@ class PubSubMessageBrokerTest extends MockeryTestCase
         );
 
         $topicName = 'topicName';
-        $messages  = static::createMessages(3, [
+        $messages  = static::createPubSubMessages(3, [
             'topic' => $topicName
         ]);
 
@@ -84,7 +85,7 @@ class PubSubMessageBrokerTest extends MockeryTestCase
         );
 
         $topicName = 'topic';
-        $messages  = static::createMessages(3, [
+        $messages  = static::createPubSubMessages(3, [
             'topic' => $topicName
         ]);
 
@@ -169,9 +170,9 @@ class PubSubMessageBrokerTest extends MockeryTestCase
             $pubSubClient
         );
 
-        $messages1 = self::createMessages(3, ['topic' => 'topic1']);
-        $messages2 = self::createMessages(6, ['topic' => 'topic2']);
-        $messages3 = self::createMessages(3, ['topic' => 'topic3']);
+        $messages1 = self::createPubSubMessages(3, ['topic' => 'topic1']);
+        $messages2 = self::createPubSubMessages(6, ['topic' => 'topic2']);
+        $messages3 = self::createPubSubMessages(3, ['topic' => 'topic3']);
 
         $allMessages = array_merge($messages1, $messages2, $messages3);
 
@@ -234,8 +235,8 @@ class PubSubMessageBrokerTest extends MockeryTestCase
         $response = $broker->publish($messageCollection);
         foreach ($response->getDispatchedMessages() as $key => $dispatchedMessage) {
             $this->assertTrue($dispatchedMessage->wasDispatchedSuccessfully());
-            $this->assertEquals($dispatchedMessage->getEventData(), $allMessages[$key]->toArray()[Message::EVENT_DATA]);
-            $this->assertEquals($dispatchedMessage->getEventAttributes(), $allMessages[$key]->toArray()[Message::EVENT_ATTRIBUTES]);
+            $this->assertEquals($dispatchedMessage->getEventData(), $allMessages[$key]->toArray()[PubSubMessage::EVENT_DATA]);
+            $this->assertEquals($dispatchedMessage->getEventAttributes(), $allMessages[$key]->toArray()[PubSubMessage::EVENT_ATTRIBUTES]);
         }
     }
 
@@ -257,9 +258,9 @@ class PubSubMessageBrokerTest extends MockeryTestCase
             $pubSubClient
         );
 
-        $messages1 = self::createMessages(3, ['topic' => 'topic1']);
-        $messages2 = self::createMessages(6, ['topic' => 'topic2']);
-        $messages3 = self::createMessages(3, ['topic' => 'topic3']);
+        $messages1 = self::createPubSubMessages(3, ['topic' => 'topic1']);
+        $messages2 = self::createPubSubMessages(6, ['topic' => 'topic2']);
+        $messages3 = self::createPubSubMessages(3, ['topic' => 'topic3']);
 
         $allMessages = array_merge($messages1, $messages2, $messages3);
 
@@ -328,8 +329,8 @@ class PubSubMessageBrokerTest extends MockeryTestCase
             } else {
                 $this->assertFalse($dispatchedMessage->wasDispatchedSuccessfully());
             }
-            $this->assertEquals($dispatchedMessage->getEventData(), $allMessages[$key]->toArray()[Message::EVENT_DATA]);
-            $this->assertEquals($dispatchedMessage->getEventAttributes(), $allMessages[$key]->toArray()[Message::EVENT_ATTRIBUTES]);
+            $this->assertEquals($dispatchedMessage->getEventData(), $allMessages[$key]->toArray()[PubSubMessage::EVENT_DATA]);
+            $this->assertEquals($dispatchedMessage->getEventAttributes(), $allMessages[$key]->toArray()[PubSubMessage::EVENT_ATTRIBUTES]);
         }
     }
 }

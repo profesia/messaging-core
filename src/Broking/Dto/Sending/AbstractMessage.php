@@ -31,10 +31,6 @@ abstract class AbstractMessage implements MessageInterface
     ) {
     }
 
-    abstract public function encode(): array;
-
-    abstract public function toArray(): array;
-
     public function getTopic(): string
     {
         return $this->topic;

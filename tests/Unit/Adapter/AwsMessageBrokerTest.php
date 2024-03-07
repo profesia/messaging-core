@@ -16,7 +16,7 @@ final class AwsMessageBrokerTest extends MockeryTestCase
 {
     use Helper;
 
-    public function testCanPublishSuccessfully(): void
+    public function testCanPublish(): void
     {
         $eventBridgeClient = Mockery::mock(EventBridgeClient::class);
         $broker            = new AwsMessageBroker($eventBridgeClient);
