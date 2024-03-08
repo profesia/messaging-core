@@ -31,9 +31,10 @@ trait Helper
                 $forcedValues['correlationId'] ?? 'correlationId',
                 $forcedValues['subscribeName'] ?? "subscribeName{$index}",
                 $forcedValues['topic'] ?? "topic{$index}",
-                $forcedValues['data'] ?? [
-                'data' => $index,
-            ]
+                $forcedValues['data'] ??
+                [
+                    'data' => $index,
+                ]
             );
             $index++;
         }
@@ -54,15 +55,18 @@ trait Helper
         $index    = $startIndex;
         for ($i = 1; $i <= $number; $i++) {
             $messages[] = new AwsMessage(
-                $forcedValues['topic'] ?? "topic{$index}",
-                $forcedValues['provider'] ?? "provider{$index}",
+                $forcedValues['resource'] ?? "resource{$index}",
                 $forcedValues['eventType'] ?? "eventType{$index}",
+                $forcedValues['provider'] ?? "provider{$index}",
+                $forcedValues['objectId'] ?? "objectId{$index}",
                 new DateTimeImmutable(),
                 $forcedValues['correlationId'] ?? 'correlationId',
-                $forcedValues['data'] ?? ['data' => $index],
-                $forcedValues['resource'] ?? "resource{$index}",
-                $forcedValues['objectId'] ?? "objectId{$index}",
                 $forcedValues['subscribeName'] ?? "subscribeName{$index}",
+                $forcedValues['topic'] ?? "topic{$index}",
+                $forcedValues['data'] ??
+                [
+                    'data' => $index,
+                ]
             );
             $index++;
         }

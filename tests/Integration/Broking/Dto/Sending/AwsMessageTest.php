@@ -6,6 +6,7 @@ namespace Profesia\MessagingCore\Test\Integration\Broking\Dto\Sending;
 
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
+use Profesia\MessagingCore\Broking\Dto\Sending\AbstractMessage;
 use Profesia\MessagingCore\Broking\Dto\Sending\AwsMessage;
 use Profesia\MessagingCore\Broking\Exception\MessagePayloadEncodingException;
 use Profesia\MessagingCore\Exception\AbstractRuntimeException;
@@ -59,28 +60,28 @@ class AwsMessageTest extends TestCase
     public function testCanGetData(array $data, ?AbstractRuntimeException $exception = null): void
     {
         $message = new AwsMessage(
-            $data['topic'],
-            $data['provider'],
+            $data['resource'],
             $data['eventType'],
+            $data['provider'],
+            $data['objectId'],
             $data['eventOccurredOn'],
             $data['correlationId'],
-            $data['payload'],
-            $data['resource'],
-            $data['objectId'],
             $data['subscribeName'],
+            $data['topic'],
+            $data['payload'],
         );
 
         $this->assertEquals($data['topic'], $message->getTopic());
 
         $this->assertEquals([
-            AwsMessage::EVENT_PROVIDER       => $data['provider'],
-            AwsMessage::EVENT_TYPE           => $data['eventType'],
-            AwsMessage::EVENT_CORRELATION_ID => $data['correlationId'],
-            AwsMessage::EVENT_OCCURRED_ON    => $data['eventOccurredOn']->format('Y-m-d H:i:s.u'),
-            AwsMessage::EVENT_RESOURCE       => $data['resource'],
-            AwsMessage::EVENT_OBJECT_ID      => $data['objectId'],
-            AwsMessage::EVENT_SUBSCRIBE_NAME => $data['subscribeName'],
-            AwsMessage::MESSAGE_PAYLOAD      => $data['payload'],
+            AbstractMessage::EVENT_PROVIDER       => $data['provider'],
+            AbstractMessage::EVENT_TYPE           => $data['eventType'],
+            AbstractMessage::EVENT_CORRELATION_ID => $data['correlationId'],
+            AbstractMessage::EVENT_OCCURRED_ON    => $data['eventOccurredOn']->format('Y-m-d H:i:s.u'),
+            AbstractMessage::EVENT_RESOURCE       => $data['resource'],
+            AbstractMessage::EVENT_OBJECT_ID      => $data['objectId'],
+            AbstractMessage::EVENT_SUBSCRIBE_NAME => $data['subscribeName'],
+            AbstractMessage::MESSAGE_PAYLOAD      => $data['payload'],
         ], $message->getData());
 
         $this->assertEquals([
@@ -88,14 +89,14 @@ class AwsMessageTest extends TestCase
             AwsMessage::DETAIL_TYPE => $data['eventType'],
             AwsMessage::TIME        => $data['eventOccurredOn']->format('Y-m-d H:i:s.u'),
             AwsMessage::DETAIL      => [
-                AwsMessage::EVENT_PROVIDER       => $data['provider'],
-                AwsMessage::EVENT_TYPE           => $data['eventType'],
-                AwsMessage::EVENT_CORRELATION_ID => $data['correlationId'],
-                AwsMessage::EVENT_OCCURRED_ON    => $data['eventOccurredOn']->format('Y-m-d H:i:s.u'),
-                AwsMessage::EVENT_RESOURCE       => $data['resource'],
-                AwsMessage::EVENT_OBJECT_ID      => $data['objectId'],
-                AwsMessage::EVENT_SUBSCRIBE_NAME => $data['subscribeName'],
-                AwsMessage::MESSAGE_PAYLOAD      => $data['payload'],
+                AbstractMessage::EVENT_PROVIDER       => $data['provider'],
+                AbstractMessage::EVENT_TYPE           => $data['eventType'],
+                AbstractMessage::EVENT_CORRELATION_ID => $data['correlationId'],
+                AbstractMessage::EVENT_OCCURRED_ON    => $data['eventOccurredOn']->format('Y-m-d H:i:s.u'),
+                AbstractMessage::EVENT_RESOURCE       => $data['resource'],
+                AbstractMessage::EVENT_OBJECT_ID      => $data['objectId'],
+                AbstractMessage::EVENT_SUBSCRIBE_NAME => $data['subscribeName'],
+                AbstractMessage::MESSAGE_PAYLOAD      => $data['payload'],
             ],
         ], $message->toArray());
 
@@ -106,14 +107,14 @@ class AwsMessageTest extends TestCase
                 AwsMessage::TIME        => $data['eventOccurredOn']->format('Y-m-d H:i:s.u'),
                 AwsMessage::DETAIL      => json_encode(
                     [
-                        AwsMessage::EVENT_PROVIDER       => $data['provider'],
-                        AwsMessage::EVENT_TYPE           => $data['eventType'],
-                        AwsMessage::EVENT_CORRELATION_ID => $data['correlationId'],
-                        AwsMessage::EVENT_OCCURRED_ON    => $data['eventOccurredOn']->format('Y-m-d H:i:s.u'),
-                        AwsMessage::EVENT_RESOURCE       => $data['resource'],
-                        AwsMessage::EVENT_OBJECT_ID      => $data['objectId'],
-                        AwsMessage::EVENT_SUBSCRIBE_NAME => $data['subscribeName'],
-                        AwsMessage::MESSAGE_PAYLOAD      => $data['payload'],
+                        AbstractMessage::EVENT_PROVIDER       => $data['provider'],
+                        AbstractMessage::EVENT_TYPE           => $data['eventType'],
+                        AbstractMessage::EVENT_CORRELATION_ID => $data['correlationId'],
+                        AbstractMessage::EVENT_OCCURRED_ON    => $data['eventOccurredOn']->format('Y-m-d H:i:s.u'),
+                        AbstractMessage::EVENT_RESOURCE       => $data['resource'],
+                        AbstractMessage::EVENT_OBJECT_ID      => $data['objectId'],
+                        AbstractMessage::EVENT_SUBSCRIBE_NAME => $data['subscribeName'],
+                        AbstractMessage::MESSAGE_PAYLOAD      => $data['payload'],
                     ],
                 ),
             ];

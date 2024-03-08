@@ -17,15 +17,15 @@ class AwsMessage extends AbstractMessage
     public const DETAIL      = 'Detail';
 
     public function __construct(
-        string $topic,
-        string $provider,
+        string $resource,
         string $eventType,
+        string $provider,
+        string $objectId,
         DateTimeImmutable $eventOccurredOn,
         string $correlationId,
-        array $payload,
-        string $resource,
-        string $objectId,
         string $subscribeName,
+        string $topic,
+        array $payload,
     ) {
         parent::__construct(
             $topic,
