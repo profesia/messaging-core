@@ -227,4 +227,84 @@ final class AwsBatchMessageBrokerTest extends MockeryTestCase
             }
         }
     }
+
+    public function testCanHandleBothTypesOfExceptions(): void
+    {
+        $eventBridgeClient = Mockery::mock(EventBridgeClient::class);
+        $broker            = new AwsBatchMessageBroker($eventBridgeClient);
+
+        $messages1 = array_merge(
+            self::createAwsMessages(2, ['topic' => 'topic1']),
+            self::createAwsMessages(2, ['topic' => 'topic1', 'data' => ['data' => pack('S4', 1974, 106, 28225, 32725)]], 3),
+            self::createAwsMessages(2, ['topic' => 'topic1'], 5),
+        );
+
+        $messages2 = self::createAwsMessages(3, ['topic' => 'topic2'], 1);
+
+        $allMessages = array_merge($messages1, $messages2);
+
+        $messageCollection = GroupedMessagesCollection::createFromMessages(
+            ...$allMessages
+        );
+
+        $eventBridgeClient
+            ->shouldReceive('putEvents')
+            ->once()
+            ->withArgs(function (array $argument) use ($messageCollection) {
+                return $argument ===
+                    [
+                        'Entries' =>
+                            array_map(
+                                static fn(AwsMessage $message) => [...$message->encode(), 'EventBusName' => 'topic1'],
+                                array_filter(
+                                    $messageCollection->getMessagesForTopic('topic1'),
+                                    static fn(AwsMessage $message, int $key) => ($key !== 2 && $key !== 3),
+                                    ARRAY_FILTER_USE_BOTH
+                                )
+                            )
+                    ];
+            })->andThrow(new AwsException('Testing exception', Mockery::mock('Aws\CommandInterface')));
+
+        $eventBridgeClient
+            ->shouldReceive('putEvents')
+            ->once()
+            ->withArgs(function (array $argument) use ($messageCollection) {
+                return $argument ===
+                    [
+                        'Entries' =>
+                            array_map(
+                                static fn(AwsMessage $message) => [...$message->encode(), 'EventBusName' => 'topic2'],
+                                $messageCollection->getMessagesForTopic('topic2')
+                            )
+                    ];
+            });
+
+        $response            = $broker->publish($messageCollection);
+        $awsExceptionKeys = [
+            0,
+            1,
+            4,
+            5
+        ];
+
+        $abstractExceptionKeys = [
+            2,
+            3
+        ];
+
+        foreach ($response->getDispatchedMessages() as $key => $dispatchedMessage) {
+            $hasException = (in_array($key, $awsExceptionKeys) || in_array($key, $abstractExceptionKeys));
+            $this->assertEquals($hasException === false, $dispatchedMessage->wasDispatchedSuccessfully());
+            $this->assertEquals($dispatchedMessage->getEventAttributes(), $allMessages[$key]->getAttributes());
+            $this->assertEquals($dispatchedMessage->getEventData(), $allMessages[$key]->getData());
+            if (in_array($key, $abstractExceptionKeys)) {
+                $this->assertEquals(
+                    "Failed to encode message payload. Cause: [{Malformed UTF-8 characters, possibly incorrectly encoded}]",
+                    $dispatchedMessage->getDispatchReason()
+                );
+            } elseif (in_array($key, $awsExceptionKeys)) {
+                $this->assertEquals('Testing exception', $dispatchedMessage->getDispatchReason());
+            }
+        }
+    }
 }

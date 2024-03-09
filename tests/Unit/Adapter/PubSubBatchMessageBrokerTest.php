@@ -470,4 +470,114 @@ class PubSubBatchMessageBrokerTest extends MockeryTestCase
             }
         }
     }
+
+    public function testCanHandleBothTypesOfExceptions(): void
+    {
+        /** @var PubSubClient|MockInterface $pubSubClient */
+        $pubSubClient = Mockery::mock(PubSubClient::class);
+
+        /** @var Topic|MockInterface $topic1 */
+        $topic1 = Mockery::mock(Topic::class);
+
+        /** @var Topic|MockInterface $topic2 */
+        $topic2 = Mockery::mock(Topic::class);
+
+        $broker = new PubSubBatchMessageBroker(
+            $pubSubClient
+        );
+
+        $messages1 = array_merge(
+            self::createPubSubMessages(2, ['topic' => 'topic1']),
+            self::createPubSubMessages(2, ['topic' => 'topic1', 'data' => ['data' => pack('S4', 1974, 106, 28225, 32725)]], 3),
+            self::createPubSubMessages(2, ['topic' => 'topic1'], 5),
+        );
+
+        $messages2 = self::createPubSubMessages(3, ['topic' => 'topic2'], 1);
+
+        $allMessages = array_merge($messages1, $messages2);
+
+        $pubSubClient
+            ->shouldReceive('topic')
+            ->once()
+            ->withArgs(
+                [
+                    'topic1',
+                ]
+            )
+            ->andReturn(
+                $topic1
+            );
+
+        $pubSubClient
+            ->shouldReceive('topic')
+            ->once()
+            ->withArgs(
+                [
+                    'topic2',
+                ]
+            )
+            ->andReturn(
+                $topic2
+            );
+
+        $messageCollection = GroupedMessagesCollection::createFromMessages(
+            ...$allMessages
+        );
+
+        $topic1
+            ->shouldReceive('publishBatch')
+            ->once()
+            ->withArgs(
+                [
+                    array_map(
+                        static fn(PubSubMessage $message) => $message->encode(),
+                        array_filter(
+                            $messageCollection->getMessagesForTopic('topic1'),
+                            static fn(PubSubMessage $message, int $key) => ($key !== 2 && $key !== 3),
+                            ARRAY_FILTER_USE_BOTH
+                        )
+                    ),
+                ]
+            )->andThrow(new GoogleException('Testing exception'));
+
+        $topic2
+            ->shouldReceive('publishBatch')
+            ->once()
+            ->withArgs(
+                [
+                    array_map(
+                        static fn(PubSubMessage $message) => $message->encode(),
+                        $messageCollection->getMessagesForTopic('topic2'),
+                    ),
+                ]
+            );
+
+        $response            = $broker->publish($messageCollection);
+        $googleExceptionKeys = [
+            0,
+            1,
+            4,
+            5
+        ];
+
+        $abstractExceptionKeys = [
+            2,
+            3
+        ];
+
+        foreach ($response->getDispatchedMessages() as $key => $dispatchedMessage) {
+            $hasException = (in_array($key, $googleExceptionKeys) || in_array($key, $abstractExceptionKeys));
+            $this->assertEquals($hasException === false, $dispatchedMessage->wasDispatchedSuccessfully());
+            $this->assertEquals($dispatchedMessage->getEventAttributes(), $allMessages[$key]->getAttributes());
+            $this->assertEquals($dispatchedMessage->getEventData(), $allMessages[$key]->getData());
+            if (in_array($key, $abstractExceptionKeys)) {
+                $this->assertEquals(
+                    "Failed to encode message payload. Cause: [{Malformed UTF-8 characters, possibly incorrectly encoded}]",
+                    $dispatchedMessage->getDispatchReason()
+                );
+            } elseif (in_array($key, $googleExceptionKeys)) {
+                $this->assertEquals('Testing exception', $dispatchedMessage->getDispatchReason());
+            }
+        }
+    }
 }
