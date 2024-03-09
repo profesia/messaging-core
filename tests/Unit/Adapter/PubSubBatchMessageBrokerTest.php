@@ -457,11 +457,17 @@ class PubSubBatchMessageBrokerTest extends MockeryTestCase
             6,
             11
         ];
+
         foreach ($response->getDispatchedMessages() as $key => $dispatchedMessage) {
             $this->assertEquals(in_array($key, $errorKeys) === false, $dispatchedMessage->wasDispatchedSuccessfully());
             $this->assertEquals($dispatchedMessage->getEventAttributes(), $allMessages[$key]->toArray()[PubSubMessage::EVENT_ATTRIBUTES]);
             $this->assertEquals($dispatchedMessage->getEventData(), $allMessages[$key]->toArray()[PubSubMessage::EVENT_DATA]);
-
+            if (in_array($key, $errorKeys) === true) {
+                $this->assertEquals(
+                    "Failed to encode message payload. Cause: [{Malformed UTF-8 characters, possibly incorrectly encoded}]",
+                    $dispatchedMessage->getDispatchReason()
+                );
+            }
         }
     }
 }

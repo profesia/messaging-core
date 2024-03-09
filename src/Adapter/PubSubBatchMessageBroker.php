@@ -31,10 +31,12 @@ final class PubSubBatchMessageBroker implements MessageBrokerInterface
             $messagesDataInTopic = [];
             $dispatchedMessages  = [];
             $encodedMessages     = [];
-            foreach ($collection->getMessagesForTopic($topicName) as $key => $message) {
+            $messages            = $collection->getMessagesForTopic($topicName);
+            $arrayOrderedKeys    = array_keys($messages);
+            foreach ($messages as $key => $message) {
                 try {
-                    $encodedMessages[$key]     = $message;
                     $messagesDataInTopic[$key] = $message->encode();
+                    $encodedMessages[$key]     = $message;
                 } catch (AbstractRuntimeException $e) {
                     $dispatchedMessages[$key] = new DispatchedMessage(
                         $message,
@@ -51,32 +53,42 @@ final class PubSubBatchMessageBroker implements MessageBrokerInterface
                     $messagesDataInTopic
                 );
 
+                $dispatchedBatch = [];
+                foreach ($arrayOrderedKeys as $key) {
+                    if (array_key_exists($key, $encodedMessages)) {
+                        $dispatchedBatch[] = new DispatchedMessage(
+                            $encodedMessages[$key],
+                            new BrokingStatus(
+                                true
+                            )
+                        );
+                    } else {
+                        $dispatchedBatch[] = $dispatchedMessages[$key];
+                    }
+                }
+
                 $brokingBatchResponse = $brokingBatchResponse->appendDispatchedMessages(
-                    ...array_replace(
-                        array_map(static function (MessageInterface $message): DispatchedMessage {
-                            return new DispatchedMessage(
-                                $message,
-                                new BrokingStatus(
-                                    true
-                                )
-                            );
-                        }, $encodedMessages),
-                        $dispatchedMessages
-                    )
+                    ...$dispatchedBatch
                 );
+
             } catch (GoogleException $e) {
+                $dispatchedBatch = [];
+                foreach ($arrayOrderedKeys as $key) {
+                    if (array_key_exists($key, $encodedMessages)) {
+                        $dispatchedBatch[] = new DispatchedMessage(
+                            $encodedMessages[$key],
+                            new BrokingStatus(
+                                false,
+                                $e->getMessage()
+                            )
+                        );
+                    } else {
+                        $dispatchedBatch[] = $dispatchedMessages[$key];
+                    }
+                }
+
                 $brokingBatchResponse = $brokingBatchResponse->appendDispatchedMessages(
-                    ...array_replace(
-                        array_map(static function (MessageInterface $message) use ($e): DispatchedMessage {
-                            return new DispatchedMessage(
-                                $message,
-                                new BrokingStatus(
-                                    false,
-                                    $e->getMessage()
-                                )
-                            );
-                        }, $encodedMessages),
-                        $dispatchedMessages)
+                    ...$dispatchedBatch
                 );
             }
         }

@@ -30,6 +30,7 @@ final class AwsBatchMessageBroker implements MessageBrokerInterface
             $entries            = [];
             $encodedMessages    = [];
             $dispatchedMessages = [];
+            $arrayOrderedKeys   = array_keys($messages);
 
             foreach ($messages as $key => $message) {
                 try {
@@ -46,32 +47,42 @@ final class AwsBatchMessageBroker implements MessageBrokerInterface
             try {
                 $this->eventBridgeClient->putEvents(['Entries' => $entries]);
 
+                $dispatchedBatch = [];
+                foreach ($arrayOrderedKeys as $key) {
+                    if (array_key_exists($key, $encodedMessages)) {
+                        $dispatchedBatch[$key] = new DispatchedMessage(
+                            $encodedMessages[$key],
+                            new BrokingStatus(
+                                true
+                            )
+                        );
+                    } else {
+                        $dispatchedBatch[$key] = $dispatchedMessages[$key];
+                    }
+                }
+
                 $brokingBatchResponse = $brokingBatchResponse->appendDispatchedMessages(
-                    ...array_replace(
-                        array_map(static function (MessageInterface $message): DispatchedMessage {
-                            return new DispatchedMessage(
-                                $message,
-                                new BrokingStatus(
-                                    true
-                                )
-                            );
-                        }, $encodedMessages),
-                        $dispatchedMessages
-                    )
+                    ...$dispatchedBatch
                 );
+
             } catch (AwsException $e) {
+                $dispatchedBatch = [];
+                foreach ($arrayOrderedKeys as $key) {
+                    if (array_key_exists($key, $encodedMessages)) {
+                        $dispatchedBatch[$key] = new DispatchedMessage(
+                            $encodedMessages[$key],
+                            new BrokingStatus(
+                                false,
+                                $e->getMessage()
+                            )
+                        );
+                    } else {
+                        $dispatchedBatch[$key] = $dispatchedMessages[$key];
+                    }
+                }
+
                 $brokingBatchResponse = $brokingBatchResponse->appendDispatchedMessages(
-                    ...array_replace(
-                        array_map(static function (MessageInterface $message) use ($e): DispatchedMessage {
-                            return new DispatchedMessage(
-                                $message,
-                                new BrokingStatus(
-                                    false,
-                                    $e->getMessage()
-                                )
-                            );
-                        }, $encodedMessages),
-                        $dispatchedMessages)
+                    ...$dispatchedBatch
                 );
             }
         }

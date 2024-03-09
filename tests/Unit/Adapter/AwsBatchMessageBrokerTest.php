@@ -120,53 +120,110 @@ final class AwsBatchMessageBrokerTest extends MockeryTestCase
         }
     }
 
-    public function testCanHandleAwsExceptionInMultipleTopics(): void
-    {
-
-    }
-
-    public function testCanHandleExceptionOnEncode(): void
+    public function testCanHandleAbstractRuntimeExceptionInMultipleTopics(): void
     {
         $eventBridgeClient = Mockery::mock(EventBridgeClient::class);
         $broker            = new AwsBatchMessageBroker($eventBridgeClient);
 
-        $topicName = 'testTopic';
-        $messages  = self::createAwsMessages(3, ['topic' => $topicName]);
-        $messages  = [
-            ...$messages,
-            ...self::createAwsMessages(1, [
-                'topic'   => $topicName,
-                'data' => [
-                    'data' => pack('S4', 1974, 106, 28225, 32725),
-                ],
-            ], 4),
-        ];
+        $messages1 = array_merge(
+            self::createAwsMessages(1, ['topic' => 'topic1'], 1),
+            self::createAwsMessages(1, ['topic' => 'topic1', 'data' => ['data' => pack('S4', 1974, 106, 28225, 32725)]], 2),
+            self::createAwsMessages(1, ['topic' => 'topic1'], 3),
+        );
 
-        $messageCollection = GroupedMessagesCollection::createFromMessages(...$messages);
+        $messages2 = array_merge(
+            self::createAwsMessages(2, ['topic' => 'topic2']),
+            self::createAwsMessages(2, ['topic' => 'topic2', 'data' => ['data' => pack('S4', 1974, 106, 28225, 32725)]], 3),
+            self::createAwsMessages(2, ['topic' => 'topic2'], 5),
+        );
+
+        $messages3 = array_merge(
+            self::createAwsMessages(1, ['topic' => 'topic3'], 1),
+            self::createAwsMessages(1, ['topic' => 'topic3'], 2),
+            self::createAwsMessages(1, ['topic' => 'topic3', 'data' => ['data' => pack('S4', 1974, 106, 28225, 32725)]], 3),
+        );
+
+        $allMessages = array_merge($messages1, $messages2, $messages3);
+
+        $messageCollection = GroupedMessagesCollection::createFromMessages(
+            ...$allMessages
+        );
 
         $eventBridgeClient
             ->shouldReceive('putEvents')
-            ->once();
+            ->once()
+            ->withArgs(function (array $argument) use ($messageCollection) {
+                return $argument ===
+                    [
+                        'Entries' =>
+                            array_map(
+                                static fn(AwsMessage $message) => [...$message->encode(), 'EventBusName' => 'topic1'],
+                                array_filter(
+                                    $messageCollection->getMessagesForTopic('topic1'),
+                                    static fn(AwsMessage $message, int $key) => $key !== 1,
+                                    ARRAY_FILTER_USE_BOTH
+                                )
+                            )
+                    ];
+            });
+
+        $eventBridgeClient
+            ->shouldReceive('putEvents')
+            ->once()
+            ->withArgs(function (array $argument) use ($messageCollection) {
+                return $argument ===
+                    [
+                        'Entries' =>
+                            array_map(
+                                static fn(AwsMessage $message) => [...$message->encode(), 'EventBusName' => 'topic2'],
+                                array_filter(
+                                    $messageCollection->getMessagesForTopic('topic2'),
+                                    static fn(AwsMessage $message, int $key) => ($key !== 2 && $key !== 3),
+                                    ARRAY_FILTER_USE_BOTH
+                                )
+                            )
+                    ];
+            });
+
+        $eventBridgeClient
+            ->shouldReceive('putEvents')
+            ->once()
+            ->withArgs(function (array $argument) use ($messageCollection) {
+                return $argument ===
+                    [
+                        'Entries' =>
+                            array_map(
+                                static fn(AwsMessage $message) => [...$message->encode(), 'EventBusName' => 'topic3'],
+                                array_filter(
+                                    $messageCollection->getMessagesForTopic('topic3'),
+                                    static fn(AwsMessage $message, int $key) => $key !== 2,
+                                    ARRAY_FILTER_USE_BOTH
+                                )
+                            )
+                    ];
+            });
+
 
         $response = $broker->publish($messageCollection);
 
         $dispatchedMessages = $response->getDispatchedMessages();
-        $this->assertCount(count($messages), $dispatchedMessages);
+        $this->assertCount(count($allMessages), $dispatchedMessages);
 
         $errorKeys = [
-            3
+            1,
+            5,
+            6,
+            11
         ];
-        foreach ($dispatchedMessages as $key => $dispatchedMessage) {
+        foreach ($response->getDispatchedMessages() as $key => $dispatchedMessage) {
+            $this->assertEquals(in_array($key, $errorKeys) === false, $dispatchedMessage->wasDispatchedSuccessfully());
+            $this->assertEquals($dispatchedMessage->getEventAttributes(), $allMessages[$key]->getAttributes());
+            $this->assertEquals($dispatchedMessage->getEventData(), $allMessages[$key]->getData());
             if (in_array($key, $errorKeys) === true) {
-                $this->assertFalse($dispatchedMessage->wasDispatchedSuccessfully());
                 $this->assertEquals(
                     "Failed to encode message payload. Cause: [{Malformed UTF-8 characters, possibly incorrectly encoded}]",
                     $dispatchedMessage->getDispatchReason()
                 );
-            } else {
-                $this->assertTrue($dispatchedMessage->wasDispatchedSuccessfully());
-                $this->assertEquals($messages[$key]->getData(), $dispatchedMessage->getEventData());
-                $this->assertEquals($messages[$key]->getAttributes(), $dispatchedMessage->getEventAttributes());
             }
         }
     }
