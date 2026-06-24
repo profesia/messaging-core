@@ -33,7 +33,7 @@
         "pestphp/pest": "^3.0 || ^4.7"
     },
     "scripts": {
-        "test": "XDEBUG_MODE=off ./vendor/bin/pest --no-coverage",
+        "test": "XDEBUG_MODE=coverage ./vendor/bin/pest",
         "coverage": "XDEBUG_MODE=coverage ./vendor/bin/pest --coverage",
         "analyse": "./vendor/bin/phpstan analyse"
     },
