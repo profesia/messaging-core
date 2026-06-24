@@ -3,6 +3,7 @@
 namespace Profesia\MessagingCore\Test\Integration\Broking\Dto\Receiving;
 
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Profesia\MessagingCore\Broking\Dto\Receiving\PubSubReceivedMessage;
 use Profesia\MessagingCore\Broking\Dto\Sending\Message;
@@ -33,7 +34,7 @@ class PubSubReceivedMessageTest extends TestCase
         PubSubReceivedMessage::createFromJsonString($invalidJson);
     }
 
-    public function provideDataForStructureTests(): array
+    public static function provideDataForStructureTests(): array
     {
         $dataKey       = Message::EVENT_DATA;
         $attributesKey = Message::EVENT_ATTRIBUTES;
@@ -61,14 +62,7 @@ class PubSubReceivedMessageTest extends TestCase
         ];
     }
 
-    /**
-     * @param string $json
-     * @param string $missingOffset
-     * @param string $path
-     * @return void
-     *
-     * @dataProvider provideDataForStructureTests
-     */
+    #[DataProvider('provideDataForStructureTests')]
     public function testCanDetectBadMessageStructure(string $json, string $missingOffset, string $path): void
     {
         $this->expectExceptionObject(new ReceivedMessageBadStructureException("Missing offset: [$missingOffset] in path: [$path]"));

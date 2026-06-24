@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Profesia\MessagingCore\Test\Unit\Broking\Decorator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
@@ -21,7 +22,7 @@ class TopicFilteringMessagesLoggerTest extends MockeryTestCase
 {
     use Helper;
 
-    public function provideDataFroFiltering(): array
+    public static function provideDataFroFiltering(): array
     {
         return [
             'topic-name-lower-case' => [
@@ -43,13 +44,7 @@ class TopicFilteringMessagesLoggerTest extends MockeryTestCase
         ];
     }
 
-    /**
-     * @param array $allMessages
-     * @param string $targetSubstring
-     * @return void
-     *
-     * @dataProvider provideDataFroFiltering
-     */
+    #[DataProvider('provideDataFroFiltering')]
     public function testCanFilterMessages(array $allMessages, string $targetSubstring): void
     {
         $collection       = GroupedMessagesCollection::createFromMessages(

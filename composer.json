@@ -23,17 +23,17 @@
         "php": ">=8.2",
         "ext-json": "*",
         "ramsey/uuid": "^4.2",
-        "google/cloud-pubsub": "^1.39",
+        "google/cloud-pubsub": "^2.19",
         "psr/log": "^1.1 || ^2.0 || ^3.0",
         "aws/aws-sdk-php": "^3.298"
     },
     "require-dev": {
         "mockery/mockery": "^1.5",
         "phpstan/phpstan": "^1.8",
-        "pestphp/pest": "^1.22"
+        "pestphp/pest": "^4.7"
     },
     "scripts": {
-        "test": "XDEBUG_MODE=coverage ./vendor/bin/pest",
+        "test": "XDEBUG_MODE=off ./vendor/bin/pest --no-coverage",
         "coverage": "XDEBUG_MODE=coverage ./vendor/bin/pest --coverage",
         "analyse": "./vendor/bin/phpstan analyse"
     },
