@@ -30,7 +30,7 @@
     "require-dev": {
         "mockery/mockery": "^1.5",
         "phpstan/phpstan": "^1.8",
-        "pestphp/pest": "^4.7"
+        "pestphp/pest": "^3.0 || ^4.7"
     },
     "scripts": {
         "test": "XDEBUG_MODE=off ./vendor/bin/pest --no-coverage",
