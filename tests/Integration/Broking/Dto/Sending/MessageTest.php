@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Profesia\MessagingCore\Test\Integration\Broking\Dto\Sending;
 
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Profesia\MessagingCore\Broking\Dto\Sending\Message;
 use Profesia\MessagingCore\Broking\Exception\MessagePayloadEncodingException;
@@ -12,7 +13,7 @@ use Profesia\MessagingCore\Exception\AbstractRuntimeException;
 
 class MessageTest extends TestCase
 {
-    public function provideDataForDataGettingTest(): array
+    public static function provideDataForDataGettingTest(): array
     {
         return [
             'event1'                  => [
@@ -64,13 +65,7 @@ class MessageTest extends TestCase
         ];
     }
 
-    /**
-     * @param array $data
-     *
-     * @return void
-     *
-     * @dataProvider provideDataForDataGettingTest
-     */
+    #[DataProvider('provideDataForDataGettingTest')]
     public function testCanGetData(array $data, ?AbstractRuntimeException $exception = null): void
     {
         $message = new Message(
