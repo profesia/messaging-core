@@ -2,7 +2,7 @@
     "name": "profesia/messaging-core",
     "type": "library",
     "license": "MIT",
-    "description": "",
+    "description": "Library designed to provide basic frame for messaging.",
     "autoload": {
         "psr-4": {
             "Profesia\\MessagingCore\\": "src/"
