@@ -12,10 +12,10 @@ Install the latest version by running the command
 composer require profesia/messaging-core
 ```
 ## Requirements
-- PHP 7.4+
+- PHP 8.2+
 
 ## Author
-Matej Bádal - matej.badal@profesia.sk
+Matej Bádal - matej.badal@almamedia.com
 
 Alma Career Slovakia s. r. o.
 ## License

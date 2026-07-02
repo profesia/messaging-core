@@ -1,7 +1,8 @@
-version: '3'
 services:
   messaging_core:
     image: webdevops/php-dev:${PHP_VERSION:-latest}
+    environment:
+      PHP_DISMOD: ioncube
     ports:
       - ${PHP_SERVER_PORT:-9001}:9001
       - ${PHP_PORT:-9999}:9000
