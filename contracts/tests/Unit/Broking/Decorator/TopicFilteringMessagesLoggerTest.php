@@ -22,7 +22,7 @@ class TopicFilteringMessagesLoggerTest extends MockeryTestCase
 {
     use Helper;
 
-    public static function provideDataFroFiltering(): array
+    public static function provideDataForFiltering(): array
     {
         return [
             'topic-name-lower-case' => [
@@ -37,14 +37,10 @@ class TopicFilteringMessagesLoggerTest extends MockeryTestCase
                 static::createPubSubMessages(5),
                 'not-matching',
             ],
-            /*[
-                static::createMessages(11),
-                'topic1'
-            ],*/
         ];
     }
 
-    #[DataProvider('provideDataFroFiltering')]
+    #[DataProvider('provideDataForFiltering')]
     public function testCanFilterMessages(array $allMessages, string $targetSubstring): void
     {
         $collection       = GroupedMessagesCollection::createFromMessages(

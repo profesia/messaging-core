@@ -34,7 +34,7 @@ class FailedMessagesPersisterTest extends MockeryTestCase
                 $message,
                 new BrokingStatus(
                     $index % 2 !== 0,
-                    $index % 2 !== 0 ? null: "Reason{$index}"
+                    $index % 2 !== 0 ? null : "Reason{$index}"
                 )
             );
 

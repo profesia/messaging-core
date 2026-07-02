@@ -1,11 +1,11 @@
 {
-    "name": "profesia/messaging-core",
+    "name": "profesia/messaging-core-contracts",
     "type": "library",
     "license": "MIT",
-    "description": "",
+    "description": "Lightweight PHP contracts for profesia/messaging-core",
     "autoload": {
         "psr-4": {
-            "Profesia\\MessagingCore\\Adapter\\": "src/Adapter/"
+            "Profesia\\MessagingCore\\": "src/"
         }
     },
     "autoload-dev": {
@@ -19,17 +19,10 @@
             "email": "matej.badal@profesia.sk"
         }
     ],
-    "repositories": [
-        {
-            "type": "path",
-            "url": "./contracts"
-        }
-    ],
     "require": {
         "php": ">=8.2",
-        "profesia/messaging-core-contracts": "*",
-        "google/cloud-pubsub": "^1.39 || ^2.19",
-        "aws/aws-sdk-php": "^3.298"
+        "ext-json": "*",
+        "psr/log": "^1.1 || ^2.0 || ^3.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.5",
@@ -41,8 +34,6 @@
         "coverage": "XDEBUG_MODE=coverage ./vendor/bin/pest --coverage",
         "analyse": "./vendor/bin/phpstan analyse"
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": true

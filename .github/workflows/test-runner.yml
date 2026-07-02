@@ -26,6 +26,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Validate contracts composer.json
+        working-directory: contracts
+        run: composer validate --strict
+
+      - name: Install contracts dependencies
+        working-directory: contracts
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Run contracts tests
+        working-directory: contracts
+        run: composer test
+
+      - name: Run contracts PHP Stan
+        working-directory: contracts
+        run: composer analyse
+
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
 
