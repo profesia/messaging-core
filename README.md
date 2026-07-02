@@ -2,7 +2,7 @@
 
 Library designed to provide basic frame for messaging.
 
-[![Build and test](https://github.com/profesia/messaging-core/actions/workflows/test-runner.yml/badge.svg?branch=master)](https://github.com/profesia/psr15-symfony-bundle/actions/workflows/test-runner.yml)
+[![Build and test](https://github.com/profesia/messaging-core/actions/workflows/test-runner.yml/badge.svg?branch=master)](https://github.com/profesia/messaging-core/actions/workflows/test-runner.yml)
 ![PHP Version](https://img.shields.io/packagist/php-v/profesia/messaging-core)
 ![License](https://img.shields.io/github/license/profesia/messaging-core)
 
