@@ -1,5 +1,25 @@
 # Changelog
 
+## [v4.5.0](https://github.com/profesia/messaging-core/tree/v4.5.0) (2026-06-25)
+
+[Full Changelog](https://github.com/profesia/messaging-core/compare/v4.4.0...v4.5.0)
+
+## [v4.4.0](https://github.com/profesia/messaging-core/tree/v4.4.0) (2024-03-13)
+
+[Full Changelog](https://github.com/profesia/messaging-core/compare/v4.3.0...v4.4.0)
+
+## [v4.3.0](https://github.com/profesia/messaging-core/tree/v4.3.0) (2024-03-09)
+
+[Full Changelog](https://github.com/profesia/messaging-core/compare/v4.2.0...v4.3.0)
+
+## [v4.2.0](https://github.com/profesia/messaging-core/tree/v4.2.0) (2024-03-05)
+
+[Full Changelog](https://github.com/profesia/messaging-core/compare/v4.1.0...v4.2.0)
+
+## [v4.1.0](https://github.com/profesia/messaging-core/tree/v4.1.0) (2024-03-05)
+
+[Full Changelog](https://github.com/profesia/messaging-core/compare/v4.0.0...v4.1.0)
+
 ## [v4.0.0](https://github.com/profesia/messaging-core/tree/v4.0.0) (2024-02-13)
 
 [Full Changelog](https://github.com/profesia/messaging-core/compare/v3.1.0...v4.0.0)
