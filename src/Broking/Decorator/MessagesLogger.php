@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Profesia\MessagingCore\Broking\Decorator;
 
-use Profesia\MessagingCore\Broking\Dto\Sending\DispatchedMessage;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\DispatchedMessage;
 
 final class MessagesLogger extends AbstractMessagesLogger
 {

@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Profesia\MessagingCore\Broking\Dto\Sending\PubSubMessage;
 use Profesia\MessagingCore\Broking\Exception\MessagePayloadEncodingException;
-use Profesia\MessagingCore\Exception\AbstractRuntimeException;
+use Profesia\MessagingCoreContracts\Exception\AbstractRuntimeException;
 
 class PubSubMessageTest extends TestCase
 {

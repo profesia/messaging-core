@@ -7,10 +7,10 @@ namespace Profesia\MessagingCore\Test\Integration\Broking\Dto\Sending;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Profesia\MessagingCore\Broking\Dto\Sending\AbstractMessage;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\AbstractMessage;
 use Profesia\MessagingCore\Broking\Dto\Sending\AwsMessage;
 use Profesia\MessagingCore\Broking\Exception\MessagePayloadEncodingException;
-use Profesia\MessagingCore\Exception\AbstractRuntimeException;
+use Profesia\MessagingCoreContracts\Exception\AbstractRuntimeException;
 
 class AwsMessageTest extends TestCase
 {

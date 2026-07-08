@@ -6,6 +6,7 @@ namespace Profesia\MessagingCore\Broking\Dto\Sending;
 
 use DateTimeImmutable;
 use JsonException;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\AbstractMessage;
 use Profesia\MessagingCore\Broking\Exception\MessagePayloadEncodingException;
 
 class AwsMessage extends AbstractMessage
@@ -55,11 +56,16 @@ class AwsMessage extends AbstractMessage
         }
     }
 
+    /**
+     * @return array{Source: string, DetailType: string, Time: string, Detail: array<string, mixed>}
+     */
     public function toArray(): array
     {
         return [
-            ...$this->getAwsAttributes(),
-            self::DETAIL => [...$this->getMessageAttributes(), self::MESSAGE_PAYLOAD => $this->payload],
+            self::SOURCE      => $this->provider,
+            self::DETAIL_TYPE => $this->eventType,
+            self::TIME        => $this->eventOccurredOn->format('Y-m-d H:i:s.u'),
+            self::DETAIL      => [...$this->getMessageAttributes(), self::MESSAGE_PAYLOAD => $this->payload],
         ];
     }
 
@@ -73,6 +79,9 @@ class AwsMessage extends AbstractMessage
         return $this->toArray()[self::DETAIL];
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function getAwsAttributes(): array
     {
         return [
@@ -82,6 +91,9 @@ class AwsMessage extends AbstractMessage
         ];
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function getMessageAttributes(): array
     {
         return [

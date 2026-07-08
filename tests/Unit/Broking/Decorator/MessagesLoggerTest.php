@@ -8,12 +8,12 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use Profesia\MessagingCore\Broking\Decorator\MessagesLogger;
-use Profesia\MessagingCore\Broking\Dto\Sending\AbstractMessage;
-use Profesia\MessagingCore\Broking\Dto\Sending\BrokingBatchResponse;
-use Profesia\MessagingCore\Broking\Dto\Sending\BrokingStatus;
-use Profesia\MessagingCore\Broking\Dto\Sending\DispatchedMessage;
-use Profesia\MessagingCore\Broking\Dto\Sending\GroupedMessagesCollection;
-use Profesia\MessagingCore\Broking\MessageBrokerInterface;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\AbstractMessage;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\BrokingBatchResponse;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\BrokingStatus;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\DispatchedMessage;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\GroupedMessagesCollection;
+use Profesia\MessagingCoreContracts\Broking\MessageBrokerInterface;
 use Profesia\MessagingCore\Test\Assets\Helper;
 use Psr\Log\LoggerInterface;
 

@@ -8,9 +8,9 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use Profesia\MessagingCore\Broking\Decorator\AllMessagesPersister;
-use Profesia\MessagingCore\Broking\Dto\Sending\BrokingBatchResponse;
-use Profesia\MessagingCore\Broking\Dto\Sending\GroupedMessagesCollection;
-use Profesia\MessagingCore\Broking\MessageBrokerInterface;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\BrokingBatchResponse;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\GroupedMessagesCollection;
+use Profesia\MessagingCoreContracts\Broking\MessageBrokerInterface;
 use Profesia\MessagingCore\Persistence\DispatchedEventRepositoryInterface;
 use Profesia\MessagingCore\Test\Assets\Helper;
 

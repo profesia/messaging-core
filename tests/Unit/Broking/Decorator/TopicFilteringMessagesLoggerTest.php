@@ -9,12 +9,12 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use Profesia\MessagingCore\Broking\Decorator\TopicFilteringMessagesLogger;
-use Profesia\MessagingCore\Broking\Dto\Sending\AbstractMessage;
-use Profesia\MessagingCore\Broking\Dto\Sending\BrokingBatchResponse;
-use Profesia\MessagingCore\Broking\Dto\Sending\GroupedMessagesCollection;
-use Profesia\MessagingCore\Broking\Dto\Sending\Message;
-use Profesia\MessagingCore\Broking\Dto\Sending\MessageInterface;
-use Profesia\MessagingCore\Broking\MessageBrokerInterface;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\AbstractMessage;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\BrokingBatchResponse;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\GroupedMessagesCollection;
+use Profesia\MessagingCore\Broking\Dto\Sending\PubSubMessage;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\MessageInterface;
+use Profesia\MessagingCoreContracts\Broking\MessageBrokerInterface;
 use Profesia\MessagingCore\Test\Assets\Helper;
 use Psr\Log\LoggerInterface;
 
@@ -81,7 +81,7 @@ class TopicFilteringMessagesLoggerTest extends MockeryTestCase
 
         /** @var MockInterface|LoggerInterface $logger */
         $logger = Mockery::mock(LoggerInterface::class);
-        /** @var Message $message */
+        /** @var PubSubMessage $message */
         foreach ($filteredMessages as $message) {
             $logger
                 ->shouldReceive('info')
@@ -89,7 +89,7 @@ class TopicFilteringMessagesLoggerTest extends MockeryTestCase
                 ->withArgs(
                     [
                         "Message from {$projectName} was published",
-                        $message->toArray()[Message::EVENT_DATA],
+                        $message->toArray()[PubSubMessage::EVENT_DATA],
                     ]
                 );
         }

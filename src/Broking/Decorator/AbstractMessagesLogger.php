@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Profesia\MessagingCore\Broking\Decorator;
 
-use Profesia\MessagingCore\Broking\Dto\Sending\AbstractMessage;
-use Profesia\MessagingCore\Broking\Dto\Sending\BrokingBatchResponse;
-use Profesia\MessagingCore\Broking\Dto\Sending\DispatchedMessage;
-use Profesia\MessagingCore\Broking\Dto\Sending\GroupedMessagesCollection;
-use Profesia\MessagingCore\Broking\MessageBrokerInterface;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\AbstractMessage;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\BrokingBatchResponse;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\DispatchedMessage;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\GroupedMessagesCollection;
+use Profesia\MessagingCoreContracts\Broking\MessageBrokerInterface;
 use Psr\Log\LoggerInterface;
 
 abstract class AbstractMessagesLogger implements MessageBrokerInterface
@@ -42,8 +42,12 @@ abstract class AbstractMessagesLogger implements MessageBrokerInterface
             }
 
             $messageAttributes = $dispatchedMessage->getEventAttributes();
+            $eventTypeRaw      = $messageAttributes[AbstractMessage::EVENT_TYPE] ?? null;
+            $objectIdRaw       = $messageAttributes[AbstractMessage::EVENT_OBJECT_ID] ?? null;
+            $eventType         = is_scalar($eventTypeRaw) ? (string)$eventTypeRaw : '';
+            $objectId          = is_scalar($objectIdRaw) ? (string)$objectIdRaw : '';
             $this->logger->error(
-                "Error while publishing messages in {$this->projectName}. Message: Resource - [{$messageAttributes[AbstractMessage::EVENT_TYPE]}], ID - [{$messageAttributes[AbstractMessage::EVENT_OBJECT_ID]}]. Cause: [{$dispatchedMessage->getDispatchReason()}]"
+                "Error while publishing messages in {$this->projectName}. Message: Resource - [{$eventType}], ID - [{$objectId}]. Cause: [{$dispatchedMessage->getDispatchReason()}]"
             );
         }
 

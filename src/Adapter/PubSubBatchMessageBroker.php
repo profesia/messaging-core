@@ -6,13 +6,12 @@ namespace Profesia\MessagingCore\Adapter;
 
 use Google\Cloud\Core\Exception\GoogleException;
 use Google\Cloud\PubSub\PubSubClient;
-use Profesia\MessagingCore\Broking\Dto\Sending\BrokingBatchResponse;
-use Profesia\MessagingCore\Broking\Dto\Sending\BrokingStatus;
-use Profesia\MessagingCore\Broking\Dto\Sending\DispatchedMessage;
-use Profesia\MessagingCore\Broking\Dto\Sending\GroupedMessagesCollection;
-use Profesia\MessagingCore\Broking\Dto\Sending\MessageInterface;
-use Profesia\MessagingCore\Broking\MessageBrokerInterface;
-use Profesia\MessagingCore\Exception\AbstractRuntimeException;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\BrokingBatchResponse;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\BrokingStatus;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\DispatchedMessage;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\GroupedMessagesCollection;
+use Profesia\MessagingCoreContracts\Broking\MessageBrokerInterface;
+use Profesia\MessagingCoreContracts\Exception\AbstractRuntimeException;
 
 final class PubSubBatchMessageBroker implements MessageBrokerInterface
 {

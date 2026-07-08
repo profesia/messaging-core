@@ -6,6 +6,7 @@ namespace Profesia\MessagingCore\Broking\Dto\Sending;
 
 use DateTimeImmutable;
 use JsonException;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\AbstractMessage;
 use Profesia\MessagingCore\Broking\Exception\MessagePayloadEncodingException;
 
 final class PubSubMessage extends AbstractMessage
@@ -37,6 +38,9 @@ final class PubSubMessage extends AbstractMessage
         );
     }
 
+    /**
+     * @return array{attributes: array<string, string>, data: array<string, mixed>}
+     */
     public function toArray(): array
     {
         $attributes = [

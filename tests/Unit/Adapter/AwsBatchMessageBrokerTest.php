@@ -10,8 +10,8 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Profesia\MessagingCore\Adapter\AwsBatchMessageBroker;
 use Profesia\MessagingCore\Broking\Dto\Sending\AwsMessage;
-use Profesia\MessagingCore\Broking\Dto\Sending\BrokingBatchResponse;
-use Profesia\MessagingCore\Broking\Dto\Sending\GroupedMessagesCollection;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\BrokingBatchResponse;
+use Profesia\MessagingCoreContracts\Broking\Dto\Sending\GroupedMessagesCollection;
 use Profesia\MessagingCore\Broking\Dto\Sending\PubSubMessage;
 use Profesia\MessagingCore\Test\Assets\Helper;
 
